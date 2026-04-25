@@ -1,13 +1,9 @@
 ﻿const baseUrl = 'http://localhost:30001';
 
 async function getToken() {
-    const loginResponse = await fetch(`${baseUrl}/api/auth/login`, {
+    const loginResponse = await fetch(`${baseUrl}/api/auth/token`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            Username: "admin", // Replace with your actual credentials
-            Password: "123"
-        })
+        headers: { 'Content-Type': 'application/json' }
     });
 
     if (!loginResponse.ok) throw new Error('Login failed');
