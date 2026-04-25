@@ -56,12 +56,7 @@ namespace PostgreMVCApp.Helpers
         {
             try
             {
-                var queryParams = new Dictionary<string, string?>
-                {
-                    ["pageNumber"] = pageNumber.ToString(),
-                    ["pageSize"] = pageSize.ToString(),
-                    ["search"] = search
-                };
+                Dictionary<string, string?> queryParams = GetQueryParams(pageNumber, pageSize, search);
                 string url = QueryHelpers.AddQueryString("/api/ContractType", queryParams);
                 using var request = new HttpRequestMessage(HttpMethod.Get, url);
                 request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetToken());
@@ -92,12 +87,7 @@ namespace PostgreMVCApp.Helpers
         {
             try
             {
-                var queryParams = new Dictionary<string, string?>
-                {
-                    ["pageNumber"] = pageNumber.ToString(),
-                    ["pageSize"] = pageSize.ToString(),
-                    ["search"] = search
-                };
+                Dictionary<string, string?> queryParams = GetQueryParams(pageNumber, pageSize, search);
                 string url = QueryHelpers.AddQueryString("/api/Branch", queryParams);
                 using var request = new HttpRequestMessage(HttpMethod.Get, url);
                 request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetToken());
