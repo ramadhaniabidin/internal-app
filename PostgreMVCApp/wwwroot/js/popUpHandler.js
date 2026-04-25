@@ -111,7 +111,10 @@ async function updateBranch() {
 };
 
 async function saveContractType() {
-    
+    const payload = generatePayload();
+    await createContractTypeAsync(payload);
+    closeModal();
+    reloadPage();
 };
 
 async function updateContractType() {
