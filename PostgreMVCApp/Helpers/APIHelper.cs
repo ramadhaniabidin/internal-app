@@ -142,5 +142,16 @@ namespace PostgreMVCApp.Helpers
             };
         }
 
+        private Dictionary<string, string?> GetQueryParams(int pageNumber, int pageSize, string? search)
+        {
+            var queryParams = new Dictionary<string, string?>
+            {
+                ["pageNumber"] = pageNumber.ToString(),
+                ["pageSize"] = pageSize.ToString(),
+                ["search"] = search
+            };
+            return queryParams;
+        }
+
     }
 }
