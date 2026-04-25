@@ -92,6 +92,24 @@ async function createBranch(payload) {
     }
 };
 
+async function createContractTypeAsync(payload) {
+    try {
+        const token = await getToken();
+        const response = await fetch(`${baseUrl}/api/ContractType`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        if(!response.ok) throw new Error('Failed to create contract type');
+        showSuccessToast('Success creating contract type');
+    } catch (error) {
+        showErrorToast('Error creating contract type: ' + error);
+    }
+};
+
 async function updateBranchAsync(payload) {
     try {
         const token = await getToken();
