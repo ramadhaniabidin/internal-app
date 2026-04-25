@@ -27,7 +27,8 @@
                 <div class="d-flex gap-2">
                     <form asp-action="ContractTypes" method="get" class="d-flex">
                         <input type="text" name="search" class="form-control" value="@Model?.SearchTerm"
-                               id="searchInput" placeholder="Search contract types..." style="width: 250px;margin-right:10px;">
+                               id="searchInput" placeholder="Search contract types..."
+                               style="width: 250px;margin-right:10px;">
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
                     <button class="btn btn-primary" onclick="addRole()">
@@ -56,10 +57,12 @@
                                 <td>@contractType.Title</td>
                                 <td>@contractType.Code</td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" title="Edit" onclick="editContractType(@contractType.Id)">
+                                    <button class="btn btn-sm btn-warning" title="Edit"
+                                            onclick="editContractType(@contractType.Id)">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-danger" title="Delete" onclick="deleteContractType(@contractType.Id)">
+                                    <button class="btn btn-sm btn-danger" title="Delete"
+                                            onclick="deleteContractType(@contractType.Id)">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </td>
@@ -114,3 +117,6 @@
         </ul>
     </nav>
 </div>
+
+<script src="~/js/popUpHandler.js"></script>
+<script src="~/js/Master/contract-types.js"></script>
