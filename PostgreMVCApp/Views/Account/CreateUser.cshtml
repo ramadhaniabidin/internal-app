@@ -1,0 +1,36 @@
+﻿@model PostgreMVCApp.Models.User
+<h2>Create User</h2>
+
+@if (TempData["Error"] != null)
+{
+    <script>
+        alert('@TempData["Error"]');
+    </script>
+}
+
+<form action="CreateUser" method="post" class="row g-3">
+    <div class="col-md-3">
+        <label class="form-label">Username</label>
+        <input asp-for="Username" type="text" class="form-control" id="inputEmail4" required />
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Password</label>
+        <input asp-for="Password" type="text" class="form-control" id="inputEmail4" required />
+    </div>
+    
+    <div class="col-md-3">
+        <label class="form-label">Full Name</label>
+        <input asp-for="FullName" type="text" class="form-control" id="inputEmail4" required />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Email</label>
+        <input asp-for="Email" type="text" class="form-control" id="inputPassword4" required />
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Users" asp-controller="Account">
+            <input type="button" class="btn btn-outline-danger" value="Back To List" />
+        </a>
+    </div>
+</form>

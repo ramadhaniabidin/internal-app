@@ -1,0 +1,111 @@
+﻿@using PostgreMVCApp.DTO
+@model PagedResult<User>
+<h2>Manage Users</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <!-- Add Branch -->
+    <a asp-action="CreateUser" class="nav-link text-dark p-0">
+        <i class="fa-solid fa-square-plus me-2"></i>
+        <span>Add New User</span>
+    </a>
+
+    <!-- Search -->
+    <form asp-action="Users" method="get" class="d-flex">
+        <input type="text"
+               name="search"
+               value="@Model?.SearchTerm"
+               class="form-control me-2"
+               placeholder="Search user..." />
+
+        <button type="submit" class="btn btn-outline-primary">
+            Search
+        </button>
+    </form>
+
+</div>
+
+@if (Model == null || !Model.Items.Any())
+{
+    <p>No Users yet.</p>
+}
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var user in Model.Items)
+            {
+                <tr>
+                    <td>@user.Username</td>
+                    <td>@user.FullName</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <a asp-action="EditUser" asp-route-id="@user.Id" class="text-dark">
+                            <i class="fa-solid fa-pen me-2"></i>
+                        </a>
+@*                         <a href="javascript:void(0);"
+                            class="text-danger"
+                            onclick="confirmDelete(@cat.Id)">
+                            <i class="fa-solid fa-trash hover:text-red-700 cursor-pointer"></i>
+                        </a> *@
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        @if (Model != null)
+        {
+            int totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+
+            <!-- Previous -->
+            <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="Users"
+                   asp-route-page="@(Model.PageNumber - 1)"
+                   asp-route-search="@Model.SearchTerm">
+                    Previous
+                </a>
+
+            </li>
+
+            <!-- Page numbers -->
+            for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Users"
+                       asp-route-page="@i"
+                       asp-route-search="@Model.SearchTerm">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <!-- Next -->
+            <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="Users"
+                   asp-route-page="@(Model.PageNumber + 1)"
+                   asp-route-search="@Model.SearchTerm">
+                    Next
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+<a asp-action="Index" asp-controller="Home">
+    <input type="button" class="btn btn-danger" value="Back To Home" />
+</a>
+@* <button type="button" asp-action="Index" asp-controller="Home" class="btn btn-primary">Back to Home</button> *@

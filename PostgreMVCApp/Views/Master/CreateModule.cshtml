@@ -1,0 +1,51 @@
+﻿@model PostgreMVCApp.DTO.Create.CreateModules
+<h2>Add New Module</h2>
+
+@if (TempData["Error"] != null)
+{
+    <script>
+        alert('@TempData["Error"]');
+    </script>
+}
+
+<form action="CreateModule" method="post" class="row g-3">
+    <div class="col-md-3">
+        <label class="form-label">Category</label>
+        @if(Model != null && Model.ModuleCategories.Any())
+        {
+            <select asp-for="CategoryId" class="form-select" aria-label="Default select example">
+                <option selected disabled value="">-- Select Category --</option>
+                @foreach (var category in Model.ModuleCategories)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </select>
+        }
+        </div>
+    <div class="col-md-3">
+        <label class="form-label">Code</label>
+        <input asp-for="Code" type="text" class="form-control" id="inputEmail4" maxlength="5" required />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Name</label>
+        <input asp-for="Name" type="text" class="form-control" id="inputPassword4" required />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Format Transaction Code</label>
+        <input asp-for="TransactionCodeFormat" type="text" class="form-control" id="inputPassword4" required />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Link</label>
+        <input asp-for="Link" type="text" class="form-control" id="inputPassword4" required />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Icon Class</label>
+        <input asp-for="IconClass" type="text" class="form-control" id="inputPassword4" required />
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Module" asp-controller="Master">
+            <input type="button" class="btn btn-outline-danger" value="Back To List" />
+        </a>
+    </div>
+</form>

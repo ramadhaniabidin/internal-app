@@ -1,0 +1,213 @@
+﻿@{
+    Layout = null;
+}
+@model PostgreMVCApp.DTO.Display.HomeDisplay;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap" />
+    <link rel="stylesheet" href="~/css/style.css" />
+
+</head>
+
+
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="~/images/DAIKIN_logo.svg_-768x166.png" alt="Daikin Logo" class="daikin-logo">
+            </div>
+
+            <nav class="menu">
+                <ul>
+                    <li class="active"><a href="/Home/Index"><i class="fas fa-home"></i><span>Home</span></a></li>
+                    @if (Model != null && Model.ModuleCategories.Any())
+                    {
+                        foreach (var category in Model.ModuleCategories)
+                        {
+                            if(category.Modules != null && category.Modules.Any())
+                            {
+                                <li class="navbar-dropdown">
+                                    <a href="@category.Link">
+                                        <i class="@category.IconClass"></i>
+                                        <span>@category.Name</span>
+                                    </a>
+
+                                    <ul class="navbar-dropdown-content">
+                                        @foreach(var module in category.Modules)
+                                        {
+                                            <li>
+                                                <a href="@module.Link">
+                                                    <i class="@module.IconClass"></i>
+                                                    <span>@module.Name</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="@category.Link">
+                                        <i class="@category.IconClass"></i>
+                                        <span>@category.Name</span>
+                                    </a>
+                                </li>
+                            }
+    
+                        }
+                    }
+                    @if (User != null && User.IsInRole("Admin"))
+                    {
+                        <li class="navbar-dropdown">
+                            <a href="/Master/">
+                                <i class="fa-solid fa-folder-tree"></i>
+                                <span>Master Data</span>
+                            </a>
+                            <ul class="navbar-dropdown-content">
+                                <li><a href="/Master/Branch"><i class="fa-solid fa-building"></i><span>Branch</span></a></li>
+                                <li><a href="/Master/ModuleCategory"><i class="fa-solid fa-table"></i><span>Module Category</span></a></li>
+                                <li><a href="/Master/Module"><i class="fa-solid fa-cubes"></i><span>Module</span></a></li>
+                                <li>
+                                    <a href="/Master/ProcDept">
+                                        <i class="fa-solid fa-cart-flatbed"></i>
+                                        <span>Procurement Department</span>
+                                    </a>
+                                </li>
+                                <li><a href="/Account/Users"><i class="fa-solid fa-users"></i><span>Users</span></a></li>
+                                <li>
+                                    <a href="/Account/Users">
+                                        <i class="fa-solid fa-tags fa-fw"></i>
+                                        <span>Master Status</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/Account/Users">
+                                        <i class="fa-solid fa-tags fa-fw"></i>
+                                        <span>Master Status</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/Account/Users">
+                                        <i class="fa-solid fa-tags fa-fw"></i>
+                                        <span>Master Status</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/Account/Users">
+                                        <i class="fa-solid fa-tags fa-fw"></i>
+                                        <span>Master Status</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </nav>
+
+@*             <nav class="menu">
+                <ul>
+                    <li class="active"><a href="/Home/Index"><i class="fas fa-home"></i><span>Home</span></a></li>
+                    <li><a href="#"><i class="fa-solid fa-file-invoice-dollar"></i><span>Claim & Reimbursement</span></a></li>
+                    <li><a href="#"><i class="fa-solid fa-hand-holding-dollar"></i><span>Commercials</span></a></li>
+                    <li><a href="/NonCommercials/" target="_blank"><i class="fa-solid fa-print"></i><span>Non Commercials</span></a></li>
+                    <li class="navbar-dropdown">
+                        <a href="#">
+                            <i class="fa-solid fa-file-pen"></i>
+                            <span>Pending Tasks</span>
+                        </a>
+
+                        <ul class="navbar-dropdown-content">
+                            <li><a href="#"><i class="fa-solid fa-chart-line"></i><span>Item 1</span></a></li>
+                            <li><a href="#"><i class="fa-solid fa-chart-line"></i><span>Item 2</span></a></li>
+                            <li><a href="#"><i class="fa-solid fa-chart-line"></i><span>Item 3</span></a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="#"><i class="fa-solid fa-wallet"></i><span>Payment Menu</span></a></li>
+                    
+                    @if (User != null && User.IsInRole("Admin"))
+                    {
+                        <li class="navbar-dropdown">
+                            <a href="#">
+                                <i class="fa-solid fa-folder-tree"></i>
+                                <span>Master Data</span>
+                            </a>
+                            <ul class="navbar-dropdown-content">
+                                <li><a href="/Master/Branch"><i class="fa-solid fa-building"></i><span>Branch</span></a></li>
+                                <li><a href="/Master/ModuleCategory"><i class="fa-solid fa-table"></i><span>Module Category</span></a></li>
+                                <li><a href="/Master/Module"><i class="fa-solid fa-cubes"></i><span>Module</span></a></li>
+                                <li><a href="/Account/Users"><i class="fa-solid fa-users"></i><span>Users</span></a></li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </nav> *@
+
+            <div class="profile">
+                <div class="avatar">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80">
+                </div>
+                <div class="user-info">
+                    <h3>Alex Morgan</h3>
+                    <p>Designer</p>
+
+                    <a href="/Account/Logout" class="logout-btn">
+                        <i class="fas fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+
+        <main class="content">
+            <header>
+                @* <h1>Welcome Back, Alex</h1> *@
+                @if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <h1>Welcome Back, @User.Identity.Name</h1>
+                }
+                else
+                {
+                    <h1>Welcome Back, Alex</h1>
+                }
+                <p>Check out your project statistics for today</p>
+            </header>
+
+            <div class="card-container">
+@*                 <div class="card">
+                    <div class="card-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="card-info">
+                        <h3>12</h3>
+                        <p>Completed Tasks</p>
+                    </div>
+                </div> *@
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-clock"></i></div>
+                    <div class="card-info">
+                        <h3>5</h3>
+                        <p>Pending Tasks</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-users"></i></div>
+                    <div class="card-info">
+                        <h3>7</h3>
+                        <p>Active Projects</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+</body>
+</html>

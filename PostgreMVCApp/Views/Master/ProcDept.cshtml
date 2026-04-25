@@ -1,0 +1,112 @@
+﻿@using PostgreMVCApp.DTO
+@model PagedResult<ProcurementDepartment>
+<h2>Manage Procurement Departments</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <!-- Add Branch -->
+    <a asp-action="CreateProcDept" class="nav-link text-dark p-0">
+        <i class="fa-solid fa-square-plus me-2"></i>
+        <span>Add Procurement Department</span>
+    </a>
+
+    <!-- Search -->
+    <form asp-action="ProcDept" method="get" class="d-flex">
+        <input type="text"
+               name="search"
+               value="@Model?.SearchTerm"
+               class="form-control me-2"
+               placeholder="Search Procurement..." />
+
+        <button type="submit" class="btn btn-outline-primary">
+            Search
+        </button>
+    </form>
+
+</div>
+
+@if (Model == null || !Model.Items.Any())
+{
+    <p>No Procurement Department yet.</p>
+}
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Title</th>
+            <th>Approver Name</th>
+            <th>Approver Email</th>
+            <th>Approver Account</th>
+            <th>Category</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var procDept in Model.Items)
+            {
+                <tr>
+                    <td>@procDept.Code</td>
+                    <td>@procDept.Title</td>
+                    <td>@procDept.Approver_Name</td>
+                    <td>@procDept.Approver_Email</td>
+                    <td>@procDept.Approver_Account</td>
+                    <td>@procDept.Category</td>
+                    <td>
+                        <a asp-action="EditProcDept" asp-route-id="@procDept.Id" class="text-dark">
+                            <i class="fa-solid fa-pen me-2"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        @if (Model != null)
+        {
+            int totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+
+            <!-- Previous -->
+            <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="ProcDept"
+                   asp-route-page="@(Model.PageNumber - 1)"
+                   asp-route-search="@Model.SearchTerm">
+                    Previous
+                </a>
+
+            </li>
+
+            <!-- Page numbers -->
+            for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="ProcDept"
+                       asp-route-page="@i"
+                       asp-route-search="@Model.SearchTerm">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <!-- Next -->
+            <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="ProcDept"
+                   asp-route-page="@(Model.PageNumber + 1)"
+                   asp-route-search="@Model.SearchTerm">
+                    Next
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+<a asp-action="Index" asp-controller="Home">
+    <input type="button" class="btn btn-primary" value="Back To Home" />
+</a>
+@* <button type="button" asp-action="Index" asp-controller="Home" class="btn btn-primary">Back to Home</button> *@

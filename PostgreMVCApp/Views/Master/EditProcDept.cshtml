@@ -1,0 +1,75 @@
+﻿@model PostgreMVCApp.DTO.Create.CreateProcDeptDTO
+<h2>Update Procurement Department</h2>
+
+@if (TempData["Error"] != null)
+{
+    <script>
+        alert('@TempData["Error"]');
+    </script>
+}
+
+<script>
+    function onApproverChange(select) {
+        const selectedOption = select.options[select.selectedIndex];
+        const email = selectedOption.getAttribute('data-email');
+        const account = selectedOption.getAttribute('data-account');
+        updateApproverDetails(email, account);
+    };
+
+    function updateApproverDetails(email, account) {
+        document.getElementById('approver-email').value = email || '';
+        document.getElementById('approver-account').value = account || '';
+    };
+</script>
+
+
+<form action="CreateProcDept" method="post" class="row g-3">
+    <div class="col-md-3">
+        <label for="inputEmail4" class="form-label">Code</label>
+        <input asp-for="Code" type="text" class="form-control" id="code" required />
+    </div>
+    <div class="col-md-3">
+        <label for="inputPassword4" class="form-label">Title</label>
+        <input asp-for="Title" type="text" class="form-control" id="title" required />
+    </div>
+    <div class="col-md-3">
+        <label for="inputPassword4" class="form-label">Approver Name</label>
+        @if(Model != null && Model.Approvers != null && Model.Approvers.Any())
+        {
+            <select onchange="onApproverChange(this)" id="approver-name" asp-for="Approver_Name" class="form-select" aria-label="Default select example" required>
+                <option selected disabled value="">-- Select Approver --</option>
+                @foreach (var approver in Model.Approvers)
+                {
+                    <option value="@approver.FullName" data-email="@approver.Email" data-account="@approver.Username">@approver.FullName</option>
+                }
+            </select>
+        }
+    </div>
+    <div class="col-md-3">
+        <label for="inputPassword4" class="form-label">Approver Email</label>
+        <input asp-for="Approver_Email" type="text" class="form-control" id="approver-email" required readonly/>
+    </div>
+    <div class="col-md-3">
+        <label for="inputPassword4" class="form-label">Approver Account</label>
+        <input asp-for="Approver_Account" type="text" class="form-control" id="approver-account" required readonly/>
+    </div>
+    <div class="col-md-3">
+        <label for="inputPassword4" class="form-label">Category</label>
+        @if (Model != null && Model.Categories != null && Model.Categories.Any())
+        {
+            <select asp-for="Category" class="form-select" aria-label="Default select example" required>
+                <option selected disabled value="">-- Select Category --</option>
+                @foreach (var cat in Model.Categories)
+                {
+                    <option value="@cat">@cat</option>
+                }
+            </select>
+        }
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="ProcDept" asp-controller="Master">
+            <input type="button" class="btn btn-danger" value="Back To List" />
+        </a>
+    </div>
+</form>

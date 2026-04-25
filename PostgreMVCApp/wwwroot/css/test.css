@@ -1,0 +1,200 @@
+﻿:root {
+    --sidebar-w: 260px;
+    --sidebar-w-collapsed: 72px;
+    /* Sidebar gradient */
+    --sidebar-blue-1: #1952b6;
+    --sidebar-blue-2: #5378a8;
+}
+
+/* Sidebar shell */
+.sidebar {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    width: var(--sidebar-w);
+    background: linear-gradient(180deg, var(--sidebar-blue-1), var(--sidebar-blue-2));
+    /* box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7); */
+    transition: width .22s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Add more inner spacing to the sidebar content */
+.sidebar-body {
+    padding-top: 10px;
+    padding-right: 8px; /* increase distance from right edge */
+    padding-left: 4px; /* optional: keep left balanced */
+}
+
+
+/* Collapse support (if you later wire a button) */
+html[data-sidebar="collapsed"] {
+    --sidebar-w: var(--sidebar-w-collapsed);
+}
+
+/* Nav tiles */
+.nav .item {
+    background: rgba(255, 255, 255, .08);
+    margin-inline: 4px;
+}
+
+    .nav .item:hover {
+        background: rgba(255, 255, 255, .14);
+    }
+
+.nav .caret {
+    color: rgba(255, 255, 255, .9);
+}
+
+.nav .icon i {
+    color: #fff;
+}
+
+/* Submenu */
+.submenu {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .22s ease;
+    border-left: 2px solid rgba(59, 130, 246, .25);
+    margin: 0;
+    /*padding: 6px 0 6px 12px;*/
+    padding: 0;
+    box-sizing: border-box;
+    margin-right: 4px;
+}
+
+.nav-group.open .submenu {
+    max-height: 400px;
+}
+
+.subitem .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #3b82f6;
+    display: inline-block;
+}
+
+/* User card pinned bottom */
+.user-card {
+    flex: 0 0 auto;
+}
+
+.avatar {
+    background: linear-gradient(180deg, #e2e8f0, #cbd5e1);
+}
+
+/* Collapsed rail—show only avatar */
+html[data-sidebar="collapsed"] .user-card .meta,
+html[data-sidebar="collapsed"] .submenu,
+html[data-sidebar="collapsed"] .nav .item .label,
+html[data-sidebar="collapsed"] .nav .item .badge {
+    display: none !important;
+}
+
+html[data-sidebar="collapsed"] .nav .item {
+    grid-template-columns: 1fr !important;
+    justify-items: center;
+    padding-block: 10px;
+}
+
+
+
+/* === 1) Make all menu tiles the same width ===========================
+   Move spacing to the containers; keep items full-width, no margins.
+   This keeps <a.item> and <button.item> visually identical in width.
+===================================================================== */
+
+/* Add uniform inner padding for the nav stack */
+.sidebar-body .nav {
+    padding-inline: 10px; /* space from both left and right edges */
+}
+
+/* Also inset the brand chip to match */
+.sidebar-body .brand {
+    margin-inline: 10px;
+}
+
+/* Every tile fills the available width from the padded container */
+.nav .item {
+    width: 100% !important;
+    margin: 0 !important; /* undo any earlier margin-inline rules */
+    box-sizing: border-box;
+}
+
+/* Submenu aligns within the same padded container, not narrower/wider */
+.submenu {
+    margin: 0 !important;
+    padding: 0; /* left guide; no extra right margin */
+    box-sizing: border-box;
+}
+
+/* When collapsed, keep the icon rail centered and tidy */
+html[data-sidebar="collapsed"] .nav {
+    padding-inline: 6px; /* a touch of breathing room in rail mode */
+}
+
+html[data-sidebar="collapsed"] .brand {
+    margin-inline: 6px;
+}
+
+/* === 2) User card: add breathing room & prevent cramping ============ */
+.user-card {
+    margin: 10px 10px 14px 10px; /* consistent inset from sidebar edges */
+    box-sizing: border-box;
+}
+
+/* Keep the avatar and buttons aligned nicely */
+.user-main {
+    grid-template-columns: 44px 1fr; /* avatar | text/actions */
+    gap: 12px;
+}
+
+/* Actions row: stay side-by-side under the name */
+.user-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 8px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+    .user-actions .btn,
+    .user-actions .btn-icon {
+        display: inline-flex !important;
+        flex: 0 0 auto !important;
+        white-space: nowrap;
+        padding: 6px 12px;
+    }
+
+/* Collapsed rail: keep only avatar visible (as you already had) */
+html[data-sidebar="collapsed"] .user-card {
+    margin-inline: 6px;
+}
+
+
+/* Modal fade animation */
+.modal {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+    .modal.show {
+        opacity: 1;
+        visibility: visible;
+        
+    }
+
+.modal-backdrop {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+    .modal-backdrop.show {
+        opacity: 0.5;
+        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }

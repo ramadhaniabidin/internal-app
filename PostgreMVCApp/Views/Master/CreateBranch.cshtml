@@ -1,0 +1,32 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model PostgreMVCApp.Models.Branch
+<h2>Add New Branch</h2>
+
+@if (TempData["Error"] != null)
+{
+    <script>
+        alert('@TempData["Error"]');
+    </script>
+}
+
+<form action="CreateBranch" method="post" class="row g-3">
+    <div class="col-md-3">
+        <label for="inputEmail4" class="form-label">Code</label>
+        <input asp-for="Code" type="text" class="form-control" id="inputEmail4" maxlength="4" required />
+        <div class="invalid-feedback">
+            Please insert the branch code,
+        </div>
+    </div>
+    <div class="col-md-3">
+        <label for="inputPassword4" class="form-label">Name</label>
+        <input asp-for="Name" type="text" class="form-control" id="inputPassword4" required />
+        <div class="invalid-feedback">
+            Please insert the branch name.
+        </div>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>

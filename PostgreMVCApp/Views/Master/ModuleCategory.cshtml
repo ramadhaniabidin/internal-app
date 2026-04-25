@@ -1,0 +1,55 @@
+﻿@model List<PostgreMVCApp.Models.ModuleCategory>
+<h2>Manage Module Categories</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- Add Branch -->
+    <a asp-action="CreateModuleCategory" class="nav-link text-dark p-0">
+        <i class="fa-solid fa-square-plus me-2"></i>
+        <span>Add Module Category</span>
+    </a>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No Module Category yet.</p>
+}
+
+<div class="col-md-8">
+    @Html.AntiForgeryToken()
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Link</th>
+                <th>Icon Class</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (var cat in Model)
+                {
+                    <tr>
+                        <td>@cat.Name</td>
+                        <td>@cat.Link</td>
+                        <td>@cat.IconClass</td>
+                        <td>
+                            <a asp-action="EditModuleCategory" asp-route-id="@cat.Id" class="text-dark">
+                                <i class="fa-solid fa-pen me-2"></i>
+                            </a>
+                            <a href="javascript:void(0);"
+                               class="text-danger"
+                               onclick="confirmDelete(@cat.Id)">
+                                @* <i class="fa-solid fa-trash"></i> *@
+                                <i class="fa-solid fa-trash hover:text-red-700 cursor-pointer"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<a asp-action="Index" asp-controller="Home">
+    <input type="button" class="btn btn-danger" value="Back To Home" />
+</a>

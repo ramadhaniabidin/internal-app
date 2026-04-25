@@ -1,0 +1,30 @@
+﻿@{
+    Layout = null;
+}
+@model RegisterModel;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/login.css">
+</head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <h2 class="active">Sign Up</h2>
+            <div class="fadeIn first">
+                <img class="logo" src="~/images/DAIKIN_logo.svg_-768x166.png" alt="Daikin logo" />
+            </div>
+            <div asp-validation-summary="All" style="color:red"></div>
+            <form asp-action="Register" method="post">
+                <input asp-for="Username" type="text" id="login" class="fadeIn second" placeholder="Username" />
+                <input asp-for="Password" type="password" id="password" class="fadeIn third" placeholder="Password" />
+                <input asp-for="ConfirmPassword" type="password" id="confirm-password" class="fadeIn third" placeholder="Confirm Password" />
+                <input type="submit" class="fadeIn fourth" value="Sign Up" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

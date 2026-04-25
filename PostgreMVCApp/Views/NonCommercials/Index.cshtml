@@ -1,0 +1,214 @@
+﻿@model PostgreMVCApp.DTO.Display.NonCommercialList;
+@using System.Text.Json;
+@{
+    ViewData["Title"] = "Non Commercials";
+    Layout = "~/Views/Shared/TestLayout.cshtml";
+}
+
+<div class="col-12 col-xl-11 mx-auto" style="padding: 20px;">
+    @Html.AntiForgeryToken()
+    <h2>Non Commercials</h2>
+    <br />
+    <br />
+    <form>
+        <div class="row">
+            <div class="col-6">
+                <div class="row mb-3">
+                    <label for="inputEmail3" class="col-sm-4 col-form-label">Module</label>
+                    <div class="col-sm-8">
+                        <select class="form-select" id="moduleSelect" aria-label="Default select example">
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="inputPassword3" class="col-sm-4 col-form-label">Branch</label>
+                    <div class="col-sm-8">
+                        <select class="form-select" id="branchSelect" aria-label="Default select example">
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="inputPassword3" class="col-sm-4 col-form-label">Procurement Department</label>
+                    <div class="col-sm-8">
+                        <select class="form-select" id="procurementDeptSelect" aria-label="Default select example">
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="inputPassword3" class="col-sm-4 col-form-label">Status</label>
+                    <div class="col-sm-8">
+                        <select id="statusSelect" class="form-select" aria-label="Default select example">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+            </div>
+
+            <div class="col-5">
+                <div class="row mb-3">
+                    <label for="inputEmail3" class="col-sm-4 col-form-label">Pending Approver Role</label>
+                    <div class="col-sm-8">
+                        <select class="form-select" id="approverRoleSelect" aria-label="Default select example">
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="inputPassword3" class="col-sm-4 col-form-label">Search By</label>
+                    <div class="col-sm-8">
+                        <select class="form-select" id="searchBySelect" aria-label="Default select example">
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="inputKeyword" class="col-sm-4 col-form-label">Keywords</label>
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control" id="inputKeyword" placeholder="Enter keywords">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="inputPassword3" class="col-sm-4 col-form-label">Filter Date</label>
+                    <div class="col-sm-8">
+                        <select class="form-select" aria-label="Default select example" id="filterDateSelect">
+                            <option selected value="1">Created Date</option>
+                            <option value="2">Approved Date</option>
+                            <option value="3">Scheduled Payment Date</option>
+                            <option value="4">Actual Payment Date</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label">Period</label>
+
+                    <div class="col-sm-8 d-flex align-items-center">
+                        <input type="date" class="form-control" id="startDate">
+
+                        <span class="mx-3">To</span>
+
+                        <input type="date" class="form-control" id="endDate">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button id="createNewBtn" type="button" class="btn btn-primary" onclick="createNew()">Create New</button>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <br />
+    <br />
+
+    <div class="table-responsive" id="contractTable">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr class="table-primary"">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Alias</th>
+                    <th>Contract</th>
+                    <th style=" width: 150px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-responsive" id="poContractTable">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr class="table-primary"">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Alias</th>
+                    <th>PO Contract</th>
+                    <th style=" width: 150px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-responsive" id="poTable">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr class="table-primary"">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Alias</th>
+                    <th>Purchase Order</th>
+                    <th style=" width: 150px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-responsive" id="prTable">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr class="table-primary"">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Alias</th>
+                    <th>Purchase Request</th>
+                    <th style=" width: 150px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-responsive" id="qcfTable">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr class="table-primary"">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Alias</th>
+                    <th>QCF</th>
+                    <th style=" width: 150px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-responsive" id="poReleaseTable">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr class="table-primary"">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Alias</th>
+                    <th>PO Release</th>
+                    <th style=" width: 150px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+@section Scripts {
+    <script src="~/js/Non Commercials/index.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initializePage();
+        });
+    </script>
+}

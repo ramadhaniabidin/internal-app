@@ -1,0 +1,62 @@
+﻿@model PostgreMVCApp.DTO.Display.HomeDisplay
+
+<nav class="nav flex-column gap-2 px-2" aria-label="Primary">
+    @if (Model != null && Model.ModuleCategories.Any())
+    {
+        foreach (var menu in Model.ModuleCategories)
+        {
+            if (menu.Modules != null && menu.Modules.Any())
+            {
+                <div class="nav-group" data-group="analytics">
+                    <button class="item nav-toggle nav-link border rounded-3 d-grid align-items-center px-3 py-2 w-100 text-start"
+                            style="grid-template-columns: 28px 1fr auto;" aria-expanded="false"
+                            aria-controls="submenu-analytics">
+                        <span class="icon d-inline-flex justify-content-center align-items-center">
+                            <i class="@menu.IconClass"></i>
+                        </span>
+                        <span class="label text-white">@menu.Name</span>
+                        <i class="fa-solid fa-chevron-down caret"></i>
+                    </button>
+                    <div id="submenu-analytics" class="submenu ps-3" role="region" aria-label="Analytics submenu">
+                        <a href="@menu.Link" class="subitem d-grid gap-2 align-items-center px-2 py-2 rounded-3 text-decoration-none">
+                            <span class="text-white">
+                                <i class="fa-solid fa-list"></i>
+                                Transaction List
+                            </span>
+                        </a>
+                        @foreach (var module in menu.Modules)
+                        {
+                            <a href="#" class="subitem d-grid gap-2 align-items-center px-2 py-2 rounded-3 text-decoration-none">
+                                <span class="text-white">
+                                    <i class="@module.IconClass"></i>
+                                    @module.Name
+                                </span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <a href="#" class="item nav-link border rounded-3 d-grid align-items-center px-3 py-2"
+                   style="grid-template-columns: 28px 1fr auto;">
+                    <span class="icon d-inline-flex justify-content-center align-items-center">
+                        <i class="@menu.IconClass"></i>
+                    </span>
+                    <span class="label text-white">@menu.Name</span>
+                </a>
+            }
+        }
+    }
+
+    @if(User != null && User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <a href="/Master/" class="item nav-link border rounded-3 d-grid align-items-center px-3 py-2 text-decoration-none"
+           style="grid-template-columns: 28px 1fr auto;">
+            <span class="icon d-inline-flex justify-content-center align-items-center">
+                <i class="fa-solid fa-database"></i>
+            </span>
+            <span class="label text-white">Master Data</span>
+        </a>
+    }
+</nav>

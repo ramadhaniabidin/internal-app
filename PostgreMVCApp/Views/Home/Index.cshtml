@@ -1,0 +1,428 @@
+﻿@{
+    Layout = "/Views/Shared/TestLayout.cshtml";
+}
+
+<!-- Topbar -->
+<header style="display: none !important;" class="topbar sticky-top d-flex align-items-center gap-2 px-3 py-2 bg-light border-bottom">
+    <div class="search d-flex align-items-center gap-2 px-3 py-2 rounded-3 border bg-white"
+         style="min-width:280px;">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input id="search" type="search" class="form-control form-control-sm border-0 shadow-none"
+               placeholder="Search people, tickets, docs…" aria-label="Search">
+        <span class="kbd small text-muted border rounded-2 px-1">/</span>
+    </div>
+
+    <div class="spacer flex-grow-1"></div>
+
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        <button class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-2"
+                title="Create ticket">
+            <i class="fa-solid fa-circle-plus"></i> New Ticket
+        </button>
+        <button class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+                title="Submit request">
+            <i class="fa-solid fa-file-circle-plus"></i> New Request
+        </button>
+        <button class="btn btn-outline-dark btn-sm d-inline-flex align-items-center gap-2"
+                title="Post announcement">
+            <i class="fa-solid fa-bullhorn"></i> Announcement
+        </button>
+    </div>
+</header>
+
+<!-- Content -->
+<section class="content p-3 d-grid gap-3">
+    <!-- Row 1: My Approvals + My Tasks -->
+    <div class="row g-3">
+        <!-- Yang ini di-hide dulu -->
+        <div class="col-12 col-xl-7" style="display: none;">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="card-title fw-bold mb-0">My Approvals</div>
+                        <div class="text-muted small">Items assigned to you</div>
+                    </div>
+                    <span class="badge text-bg-warning">3 pending</span>
+                </div>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>PO‑78431</strong> — Laptop purchase (IT)
+                            <div class="text-muted small">
+                                Requested by <strong>Adi</strong> · Due
+                                <strong>today</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-success btn-sm">
+                                <i class="fa-solid fa-check"></i>
+                                Approve
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm">
+                                <i class="fa-solid fa-xmark"></i> Reject
+                            </button>
+                        </div>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>Leave‑REQ‑1290</strong> — Annual leave (3 days)
+                            <div class="text-muted small">
+                                Requested by <strong>Dewi</strong> · Due
+                                <strong>tomorrow</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-success btn-sm">
+                                <i class="fa-solid fa-check"></i>
+                                Approve
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm">
+                                <i class="fa-solid fa-xmark"></i> Reject
+                            </button>
+                        </div>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>Access‑GRANT‑552</strong> — SharePoint Finance site
+                            <div class="text-muted small">
+                                Requested by <strong>Gilang</strong> · SLA
+                                <strong>8h</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-success btn-sm">
+                                <i class="fa-solid fa-check"></i>
+                                Approve
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm">
+                                <i class="fa-solid fa-xmark"></i> Reject
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-7">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="card-title fw-bold mb-0">My Approvals</div>
+                        <div class="text-muted small">Items assigned to you</div>
+                    </div>
+                    <span class="badge text-bg-warning">3 pending</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Request Details</th>
+                                    <th>Requested By</th>
+                                    <th>Deadline</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">PO‑78431</div>
+                                        <div class="text-muted small">Laptop purchase (IT)</div>
+                                    </td>
+                                    <td>Adi</td>
+                                    <td><span class="text-danger fw-bold">Today</span></td>
+                                    <td class="text-end">
+                                        <div class="btn-group">
+                                            <button class="btn btn-success btn-sm" title="Approve">
+                                                <i class="fa-solid fa-check"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary btn-sm"
+                                                    title="Reject">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">Leave‑REQ‑1290</div>
+                                        <div class="text-muted small">Annual leave (3 days)</div>
+                                    </td>
+                                    <td>Dewi</td>
+                                    <td>Tomorrow</td>
+                                    <td class="text-end">
+                                        <div class="btn-group">
+                                            <button class="btn btn-success btn-sm" title="Approve">
+                                                <i class="fa-solid fa-check"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary btn-sm"
+                                                    title="Reject">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">Access‑GRANT‑552</div>
+                                        <div class="text-muted small">SharePoint Finance site</div>
+                                    </td>
+                                    <td>Gilang</td>
+                                    <td>8h (SLA)</td>
+                                    <td class="text-end">
+                                        <div class="btn-group">
+                                            <button class="btn btn-success btn-sm" title="Approve">
+                                                <i class="fa-solid fa-check"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary btn-sm"
+                                                    title="Reject">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-5">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="card-title fw-bold mb-0">My Tasks</div>
+                        <div class="text-muted small">Today &amp; overdue</div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <span class="badge text-bg-secondary">Today: 4</span>
+                        <span class="badge text-bg-danger">Overdue: 1</span>
+                    </div>
+                </div>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>Follow up vendor quote</strong>
+                            <div class="text-muted small">Procurement · Due <strong>11:00</strong></div>
+                        </div>
+                        <span class="badge text-bg-secondary align-self-center">Normal</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>Close Incident INC‑2039</strong>
+                            <div class="text-muted small">Helpdesk · Due <strong>17:00</strong></div>
+                        </div>
+                        <span class="badge text-bg-warning align-self-center">High</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>Review Policy Draft</strong>
+                            <div class="text-muted small">Compliance · Overdue <strong>1d</strong></div>
+                        </div>
+                        <span class="badge text-bg-danger align-self-center">Critical</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>Publish release notes</strong>
+                            <div class="text-muted small">IT Apps · Due <strong>today</strong></div>
+                        </div>
+                        <span class="badge text-bg-secondary align-self-center">Normal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="row g-3">
+        <div class="col-12 col-xl-7">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="card-title fw-bold mb-0">Announcements</div>
+                        <div class="text-muted small">Company &amp; IT updates</div>
+                    </div>
+                    <button class="btn btn-outline-primary btn-sm">
+                        <i class="fa-solid fa-plus"></i>
+                        New
+                    </button>
+                </div>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <strong>Quarterly Town Hall — Feb 12</strong>
+                            <div class="text-muted small">HR · Posted 2h ago</div>
+                        </div>
+                        <span class="badge text-bg-secondary align-self-center">All</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <strong>VPN maintenance tonight 22:00–23:00</strong>
+                            <div class="text-muted small">IT Infra · Posted 1d ago</div>
+                        </div>
+                        <span class="badge text-bg-warning align-self-center">IT</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <strong>New Travel Policy (v2.3)</strong>
+                            <div class="text-muted small">Finance · Posted 3d ago</div>
+                        </div>
+                        <span class="badge text-bg-secondary align-self-center">Policy</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-5">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="card-title fw-bold mb-0">Recent Activity</div>
+                        <div class="text-muted small">Audit log (last 24h)</div>
+                    </div>
+                    <span class="badge text-bg-secondary">Auto</span>
+                </div>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item">
+                        <strong>budi</strong> updated ticket <strong>INC‑2042</strong>
+                        <div class="text-muted small">10:12 · Status changed to “Resolved”</div>
+                    </div>
+                    <div class="list-group-item">
+                        <strong>citra</strong> uploaded <strong>PO‑attachment.pdf</strong>
+                        <div class="text-muted small">09:40 · PO‑78431</div>
+                    </div>
+                    <div class="list-group-item">
+                        <strong>dewi</strong> created request <strong>Access‑GRANT‑559</strong>
+                        <div class="text-muted small">08:55 · SharePoint Marketing</div>
+                    </div>
+                    <div class="list-group-item">
+                        <strong>adi</strong> commented on <strong>Change‑REQ‑311</strong>
+                        <div class="text-muted small">Yesterday · “Ready to deploy”</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="row g-3">
+        <div class="col-12 col-xl-5">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <div class="card-title fw-bold mb-0">System Status</div>
+                    <div class="text-muted small">Key services health</div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <strong>Intranet</strong>
+                            <div class="text-muted small">SharePoint Online</div>
+                        </div>
+                        <span class="badge text-bg-success align-self-center">
+                            <i class="fa-solid fa-circle-check"></i> Healthy
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <strong>Mail</strong>
+                            <div class="text-muted small">Exchange Online</div>
+                        </div>
+                        <span class="badge text-bg-success align-self-center">
+                            <i class="fa-solid fa-circle-check"></i> Healthy
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <strong>VPN</strong>
+                            <div class="text-muted small">Gateway‑01</div>
+                        </div>
+                        <span class="badge text-bg-warning align-self-center">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Maintenance
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <strong>ERP</strong>
+                            <div class="text-muted small">Finance cluster</div>
+                        </div>
+                        <span class="badge text-bg-danger align-self-center">
+                            <i class="fa-solid fa-circle-xmark"></i> Incident
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-4">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <div class="card-title fw-bold mb-0">Quick Links</div>
+                    <div class="text-muted small">Frequently used</div>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a class="list-group-item d-flex justify-content-between align-items-center" href="#">
+                        <div>
+                            <strong><i class="fa-solid fa-globe"></i> Intranet</strong>
+                            <div class="text-muted small">News & docs</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                    <a class="list-group-item d-flex justify-content-between align-items-center" href="#">
+                        <div>
+                            <strong><i class="fa-solid fa-id-badge"></i> HRIS</strong>
+                            <div class="text-muted small">Leave & payroll</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                    <a class="list-group-item d-flex justify-content-between align-items-center" href="#">
+                        <div>
+                            <strong><i class="fa-solid fa-headset"></i> Service Desk</strong>
+                            <div class="text-muted small">Tickets & requests</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                    <a class="list-group-item d-flex justify-content-between align-items-center" href="#">
+                        <div>
+                            <strong><i class="fa-solid fa-coins"></i> Finance Portal</strong>
+                            <div class="text-muted small">PO & expenses</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-3">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <div class="card-title fw-bold mb-0">My Assets & Access</div>
+                    <div class="text-muted small">Licenses · Devices · Groups</div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <strong>Microsoft 365 E3</strong>
+                            <div class="text-muted small">Licensed</div>
+                        </div>
+                        <span class="badge text-bg-success align-self-center">Active</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <strong>Notebook‑IT‑0921</strong>
+                            <div class="text-muted small">Dell Latitude · Warranty until 2027</div>
+                        </div>
+                        <span class="badge text-bg-secondary align-self-center">Asset</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <strong>Groups</strong>
+                            <div class="text-muted small">Finance‑Readers, PO‑Approvers</div>
+                        </div>
+                        <span class="badge text-bg-secondary align-self-center">Access</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

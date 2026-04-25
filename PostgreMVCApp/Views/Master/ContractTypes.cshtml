@@ -1,0 +1,116 @@
+﻿@using PostgreMVCApp.DTO
+@model PagedResult<ContractType>;
+@{
+    Layout = "~/Views/Shared/TestLayout.cshtml";
+    ViewData["Title"] = "Master Contract Types";
+}
+
+
+@if (TempData["Error"] != null)
+{
+    <script>
+        alert('@TempData["Error"]');
+    </script>
+}
+
+<div class="col-12 col-xl-10 mx-auto" style="padding: 20px;">
+    @Html.AntiForgeryToken()
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="card-title fw-bold mb-0">
+                        <i class="fa-solid fa-circle-notch"></i> Master Contract Types
+                    </div>
+                    <div class="text-muted small">Manage contract types</div>
+                </div>
+                <div class="d-flex gap-2">
+                    <form asp-action="Roles" method="get" class="d-flex">
+                        <input type="text" name="search" class="form-control" value="@Model?.SearchTerm"
+                               id="searchInput" placeholder="Search contract types..." style="width: 250px;margin-right:10px;">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </form>
+                    <button class="btn btn-primary" onclick="addRole()">
+                        <i class="fa-solid fa-plus"></i> Add New
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Code</th>
+                        <th style="width: 150px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="statusTableBody">
+                    @if (Model != null && Model.Items.Any())
+                    {
+                        @foreach (var contractType in Model.Items)
+                        {
+                            <tr>
+                                <td>@contractType.Id</td>
+                                <td>@contractType.Title</td>
+                                <td>@contractType.Code</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning" title="Edit" onclick="editStatus(@contractType.Id)">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" title="Delete" onclick="deleteStatus(@contractType.Id)">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="2" class="text-center text-muted py-4">
+                                No Contract Types found
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <nav aria-label="Page navigation" style="padding-top:10px;">
+        <ul class="pagination">
+            @if (Model != null)
+            {
+                int totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+
+                <!-- Previous -->
+                <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Roles" asp-route-page="@(Model.PageNumber - 1)"
+                           asp-route-search="@Model.SearchTerm">
+                        Previous
+                    </a>
+
+                </li>
+
+                <!-- Page numbers -->
+                for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link" asp-action="Roles" asp-route-page="@i" asp-route-search="@Model.SearchTerm">
+                            @i
+                        </a>
+                    </li>
+                }
+
+                <!-- Next -->
+                <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Roles" asp-route-page="@(Model.PageNumber + 1)"
+                           asp-route-search="@Model.SearchTerm">
+                        Next
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
