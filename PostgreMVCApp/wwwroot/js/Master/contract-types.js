@@ -5,7 +5,7 @@ const addContractTypeTitle = 'Add New Contract Type';
 const updateContractTypeTitle = 'Update Contract Type';
 
 const modalFormControls = [
-    { id: 'contractTypeName', label: 'Name', jsonProp: 'name' },
+    { id: 'contractTypeName', label: 'Name', jsonProp: 'title' },
     { id: 'contractTypeCode', label: 'Code', jsonProp: 'code' }
 ];
 
