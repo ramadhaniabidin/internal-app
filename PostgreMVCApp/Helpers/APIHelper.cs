@@ -72,6 +72,10 @@ namespace PostgreMVCApp.Helpers
                     var data = await response.Content.ReadFromJsonAsync<PagedResult<ContractType>>();
                     return data ?? new PagedResult<ContractType>();
                 }
+                else if(response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return ReturnEmptyItems<ContractType>(pageNumber, pageSize, search);
+                }
                 else
                 {
                     var error = await response.Content.ReadAsStringAsync();
@@ -124,6 +128,18 @@ namespace PostgreMVCApp.Helpers
             {
                 throw new Exception("Error fetching data", ex);
             }
+        }
+
+        private PagedResult<T> ReturnEmptyItems<T>(int pageNumber, int pageSize, string? search)
+        {
+            return new PagedResult<T>
+            {
+                Items = new List<T>(),
+                TotalCount = 0,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SearchTerm = search
+            };
         }
 
     }
