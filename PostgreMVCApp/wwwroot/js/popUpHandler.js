@@ -110,6 +110,14 @@ async function updateBranch() {
     reloadPage();
 };
 
+async function saveContractType() {
+    
+};
+
+async function updateContractType() {
+    
+};
+
 function reloadPage() {
     setTimeout(() => {
         globalThis.location.reload();

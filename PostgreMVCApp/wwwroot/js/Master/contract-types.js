@@ -10,12 +10,12 @@ const modalFormControls = [
 ];
 
 function createNewContractType(){
-    openModal(addContractTypeTitle, primaryKeyId, modalFormControls, 'btn-save');
+    openModal(addContractTypeTitle, primaryKeyId, modalFormControls, 'btn-save-contract-type');
 };
 
 async function editContractType(id) {
     const contractType = await getContractTypeById(id);
-    openModal(updateContractTypeTitle, primaryKeyId, modalFormControls, 'btn-update', contractType);
+    openModal(updateContractTypeTitle, primaryKeyId, modalFormControls, 'btn-update-contract-type', contractType);
 };
 
 async function deleteContractType(id) {
