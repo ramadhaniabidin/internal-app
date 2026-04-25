@@ -99,14 +99,7 @@ namespace PostgreMVCApp.Helpers
                 }
                 else if(response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    return new PagedResult<Branch>
-                    {
-                        Items = new List<Branch>(),
-                        TotalCount = 0,
-                        PageNumber = pageNumber,
-                        PageSize = pageSize,
-                        SearchTerm = search
-                    };
+                    return ReturnEmptyItems<Branch>(pageNumber, pageSize, search);
                 }
                 else
                 {
