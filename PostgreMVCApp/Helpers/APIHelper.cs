@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using PostgreMVCApp.DTO;
+using PostgreMVCApp.DTO.Display;
 using PostgreMVCApp.Models;
+using PostgreMVCApp.Models.Master_Data;
 using System.Net;
 
 namespace PostgreMVCApp.Helpers
@@ -52,6 +55,36 @@ namespace PostgreMVCApp.Helpers
             }
         }
 
+        public async Task<PagedResult<VendorNonCommercials>> GetVendors(int pageNumber, int pageSize, string? search)
+        {
+            try
+            {
+                Dictionary<string, string?> queryParams = GetQueryParams(pageNumber, pageSize, search);
+                string url = QueryHelpers.AddQueryString("/api/Vendor", queryParams);
+                using var request = new HttpRequestMessage(HttpMethod.Get, url);
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetToken());
+                var response = await _httpClient.SendAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadFromJsonAsync<PagedResult<VendorNonCommercials>>();
+                    return data ?? new PagedResult<VendorNonCommercials>();
+                }
+                else if(response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return ReturnEmptyItems<VendorNonCommercials>(pageNumber, pageSize, search);
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Failed to fetch data: {response.StatusCode} - {error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching data", ex);
+            }
+        }
+
         public async Task<PagedResult<ContractType>> GetContractTypes(int pageNumber, int pageSize, string? search)
         {
             try
@@ -80,6 +113,97 @@ namespace PostgreMVCApp.Helpers
             catch (Exception ex)
             {
                 throw new Exception("Error fetching contract type data", ex);
+            }
+        }
+
+        public async Task<PagedResult<UserProcDept>> GetUserProcDepts(int pageNumber, int pageSize, string? search)
+        {
+            try
+            {
+                Dictionary<string, string?> queryParams = GetQueryParams(pageNumber, pageSize, search);
+                string url = QueryHelpers.AddQueryString("/api/UserProcDept", queryParams);
+                using var request = new HttpRequestMessage(HttpMethod.Get, url);
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetToken());
+                var response = await _httpClient.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadFromJsonAsync<PagedResult<UserProcDept>>();
+                    return data ?? new PagedResult<UserProcDept>();
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return ReturnEmptyItems<UserProcDept>(pageNumber, pageSize, search);
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Failed to fetch User Procurement Departments: {response.StatusCode} - {error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching User Procurement Departments data", ex);
+            }
+        }
+
+        public async Task<PagedResult<GeneralLedgers>> GetGeneralLedgers(int pageNumber, int pageSize, string? search)
+        {
+            var queryParams = new Dictionary<string, string?>
+            {
+                ["pageNumber"] = pageNumber.ToString(),
+                ["pageSize"] = pageSize.ToString(),
+                ["keyword"] = search
+            };
+            string url = QueryHelpers.AddQueryString("/api/GeneralLedger", queryParams);
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetToken());
+            using(var response = await _httpClient.SendAsync(request))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadFromJsonAsync<PagedResult<GeneralLedgers>>();
+                    return data ?? new PagedResult<GeneralLedgers>();
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return ReturnEmptyItems<GeneralLedgers>(pageNumber, pageSize, search);
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new InvalidOperationException($"Failed to fetch User Procurement Departments: {response.StatusCode} - {error}");
+                }
+            }
+        }
+
+        public async Task<PagedResult<MaterialAnaplanDisplay>> GetMaterialAnaplans(int pageNumber, int pageSize, string? search)
+        {
+            var queryParams = new Dictionary<string, string?>
+            {
+                ["pageNumber"] = pageNumber.ToString(),
+                ["pageSize"] = pageSize.ToString(),
+                ["keyword"] = search
+            };
+            string url = QueryHelpers.AddQueryString("/api/MaterialAnaplan", queryParams);
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetToken());
+            using (var response = await _httpClient.SendAsync(request))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadFromJsonAsync<PagedResult<MaterialAnaplanDisplay>>();
+                    return data ?? new PagedResult<MaterialAnaplanDisplay>();
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return ReturnEmptyItems<MaterialAnaplanDisplay>(pageNumber, pageSize, search);
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new InvalidOperationException($"Failed to fetch Material Anaplan: {response.StatusCode} - {error}");
+                }
             }
         }
 

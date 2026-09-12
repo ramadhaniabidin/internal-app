@@ -3,7 +3,7 @@ const backdropClassName = '.modal-backdrop';
 let formControls = [];
 let buttonId = "";
 
-function renderModalBody(primaryKeyId, controls, existingData = null) {
+function renderModalBody(type, primaryKeyId, controls, existingData = null, dropDownItems = null) {
     const modalBody = document.getElementById('modal-body');
     modalBody.innerHTML = '';
 
@@ -13,10 +13,72 @@ function renderModalBody(primaryKeyId, controls, existingData = null) {
     primaryKeyInput.name = primaryKeyId;
 
     modalBody.appendChild(primaryKeyInput);
-    renderModalFormInputs(modalBody, controls, existingData);
+    renderModalFormInputs(type, modalBody, controls, existingData, dropDownItems);
 };
 
-function renderModalFormInputs(modalBody, controls, existingData = null) {
+function renderInput(type, element, existingData = null, dropDownItems = null) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'form-control';
+    input.id = element.id;
+    input.name = element.id;
+    input.readOnly = (type === "update") ? element.readOnly : false;
+    input.required = true;
+    input.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            enterHelper();
+        }
+    });
+
+    if (existingData && typeof (existingData) == "object") {
+        input.value = existingData[element.jsonProp];
+    }
+
+    return input;
+};
+
+function renderDropDown(type, element, existingData, dropDownItems) {
+    if (dropDownItems) {
+        console.log("Drop down items: ", dropDownItems);
+    }
+
+    const ddl = document.createElement('select');
+    ddl.className = 'form-select';
+    ddl.id = element.id;
+    ddl.required = true;
+
+    for (const item of dropDownItems.items) {
+        const option = document.createElement('option');
+        option.text = item["fullName"];
+        option.value = item["id"];
+        option.selected = (existingData) ?  item["fullName"] === existingData[element.jsonProp] : false;
+
+        ddl.appendChild(option);
+    }
+
+    ddl.onchange = () => {
+        onChangeApproverName(ddl.value, dropDownItems.items);
+    };
+
+    setTimeout(() => {
+        $("#" + ddl.id).select2({
+            dropdownParent: $("#" + ddl.id).parent() // Keeps select2 styling inside modals/grids if applicable
+        });
+    }, 0);
+
+    return ddl;
+
+};
+
+function onChangeApproverName(id, items){
+    const approver = items.find(i => i.id === Number(id));
+    console.log("Selected approver: ", approver);
+    $("#procDeptApproverEmail").val(approver.email);
+    $("#procDeptApproverAccount").val(approver.username);
+};
+
+function renderModalFormInputs(type, modalBody, controls, existingData = null, dropDownItems = null) {
     controls.forEach(element => {
         const div = document.createElement('div');
         div.className = 'mb-3';
@@ -26,23 +88,17 @@ function renderModalFormInputs(modalBody, controls, existingData = null) {
         label.className = 'form-label';
         label.textContent = element.label;
 
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'form-control';
-        input.id = element.id;
-        input.name = element.id;
-        input.required = true;
-
-        if (existingData && typeof (existingData) == "object") {
-            input.value = existingData[element.jsonProp];
-        }
+        // const input = renderInput(element, existingData, dropDownItems);
+        const input = element.inputType === "text" ?
+            renderInput(type, element, existingData, dropDownItems) :
+            renderDropDown(type, element, existingData, dropDownItems);
 
         modalBody.appendChild(label);
         modalBody.appendChild(input);
     });
 };
 
-function openModal(modalTitle, primaryKeyId, controls, btnDisplayId, existingData = null) {
+function openModal(modalTitle, primaryKeyId, controls, btnDisplayId, existingData = null, dropDownItems = null) {
     formControls = controls;
     buttonId = btnDisplayId;
     document.getElementById('modal-label').textContent = modalTitle;
@@ -63,15 +119,40 @@ function openModal(modalTitle, primaryKeyId, controls, btnDisplayId, existingDat
     modal.classList.add('show');
     backdrop.classList.add('show');
 
-    renderModalBody(primaryKeyId, controls, existingData);
+    renderModalBody(primaryKeyId, controls, existingData, dropDownItems);
     document.getElementById(buttonId).style.display = "block";
 };
 
+function saveUpdate(type, modalTitle, primaryKeyId, controls, callbackFunction, existingData = null, dropDownItems = null) {
+    console.log("Action type: ", type);
+    setupModalButton(callbackFunction);
+    openModalDialog(type, modalTitle, primaryKeyId, controls, existingData, dropDownItems);
+};
+
+function openModalDialog(type, modalTitle, primaryKeyId, controls, existingData, dropDownItems = null) {
+    formControls = controls;
+    document.getElementById('modal-label').textContent = modalTitle;
+    const modal = document.getElementById(modalID);
+    modal.style.display = 'block';
+
+    let backdrop = document.querySelector(backdropClassName);
+    if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.classList.add('modal-backdrop');
+        document.body.appendChild(backdrop);
+    }
+
+    // Trigger reflow to enable transition
+    void modal.offsetWidth;
+
+    modal.classList.add('show');
+    backdrop.classList.add('show');
+    renderModalBody(type, primaryKeyId, controls, existingData, dropDownItems);
+};
 
 function closeModal() {
     const modal = document.getElementById(modalID);
     const backdrop = document.querySelector(backdropClassName);
-    document.getElementById(buttonId).style.display = "none";
 
     modal.classList.remove('show');
     if (backdrop) {
@@ -96,20 +177,6 @@ function generatePayload() {
     return payload;
 };
 
-async function saveBranch() {
-    const payload = generatePayload();
-    await createBranch(payload);
-    closeModal();
-    reloadPage();
-};
-
-async function updateBranch() {
-    const payload = generatePayload();
-    await updateBranchAsync(payload);
-    closeModal();
-    reloadPage();
-};
-
 async function saveContractType() {
     const payload = generatePayload();
     await createContractTypeAsync(payload);
@@ -118,7 +185,35 @@ async function saveContractType() {
 };
 
 async function updateContractType() {
-    
+    const payload = generatePayload();
+    await updateContractTypeAsync(payload);
+    closeModal();
+    reloadPage();
+};
+
+function setupModalButton(callbackFunction) {
+    const submitBtn = document.getElementById("btn-save");
+    submitBtn.onclick = async () => {
+        try {
+            const payload = generatePayload();
+            const response = await callbackFunction(payload);
+            if (response.code !== 201 && response.code !== 200) {
+                showErrorToast(response.message);
+                return;
+            }
+            showSuccessToast(response.message);
+            closeModal();
+            reloadPage();
+        } catch (err) {
+            showErrorToast('Error: ' + error);
+        }
+
+    };
+};
+
+function enterHelper() {
+    const submitBtn = document.getElementById("btn-save");
+    submitBtn.click();
 };
 
 function reloadPage() {

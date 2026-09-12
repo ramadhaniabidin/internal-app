@@ -6,5 +6,6 @@ namespace PostgreMVCApp.DTO.Create
     {
         public List<Branch> Branches { get; set; } = new();
         public List<ProcurementDepartment> ProcurementDepartments { get; set; } = new();
+        public List<ContractType> ContractTypes { get; set; } = new();
     }
 }

@@ -377,8 +377,8 @@ function wireUserActions() {
     const btnProfile = $a('#btnProfile');
     const btnLogout = $a('#btnLogout');
     if (btnProfile) btnProfile.addEventListener('click', () => alert('Open profile (stub). Hook to your profile route.'));
-    if (btnLogout) btnLogout.addEventListener('click', () => alert('Logging out (stub). Replace with your real logout route.'));
-}
+    // if (btnLogout) btnLogout.addEventListener('click', () => alert('Logging out (stub). Replace with your real logout route.'));
+};
 
 // =========================
 // Init

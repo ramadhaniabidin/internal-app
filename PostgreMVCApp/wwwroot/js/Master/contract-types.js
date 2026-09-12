@@ -9,17 +9,17 @@ const modalFormControls = [
     { id: 'contractTypeCode', label: 'Code', jsonProp: 'code' }
 ];
 
-function createNewContractType(){
-    openModal(addContractTypeTitle, primaryKeyId, modalFormControls, 'btn-save-contract-type');
+function createNewContractType() {
+    saveUpdate(addContractTypeTitle, primaryKeyId, modalFormControls, createContractTypeAsync);
 };
 
 async function editContractType(id) {
     const contractType = await getContractTypeById(id);
-    openModal(updateContractTypeTitle, primaryKeyId, modalFormControls, 'btn-update-contract-type', contractType);
+    saveUpdate(updateContractTypeTitle, primaryKeyId, modalFormControls, updateContractTypeAsync, contractType);
 };
 
 async function deleteContractType(id) {
-    if(confirm('Are you sure you want to delete this contract type?')){
+    if (confirm('Are you sure you want to delete this branch?')) {
         await deleteContractTypeAsync(id);
         reloadPage();
     }

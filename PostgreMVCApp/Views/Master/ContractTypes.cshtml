@@ -87,7 +87,7 @@
 
                 <!-- Previous -->
                 <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
-                    <a class="page-link" asp-action="Roles" asp-route-page="@(Model.PageNumber - 1)"
+                    <a class="page-link" asp-action="ContractTypes" asp-route-page="@(Model.PageNumber - 1)"
                            asp-route-search="@Model.SearchTerm">
                         Previous
                     </a>
@@ -98,7 +98,7 @@
                 for (int i = 1; i <= totalPages; i++)
                 {
                     <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                        <a class="page-link" asp-action="Roles" asp-route-page="@i" asp-route-search="@Model.SearchTerm">
+                        <a class="page-link" asp-action="ContractTypes" asp-route-page="@i" asp-route-search="@Model.SearchTerm">
                             @i
                         </a>
                     </li>
@@ -106,7 +106,7 @@
 
                 <!-- Next -->
                 <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
-                    <a class="page-link" asp-action="Roles" asp-route-page="@(Model.PageNumber + 1)"
+                    <a class="page-link" asp-action="ContractTypes" asp-route-page="@(Model.PageNumber + 1)"
                            asp-route-search="@Model.SearchTerm">
                         Next
                     </a>
@@ -123,5 +123,6 @@
 
 </div>
 
+<script src="~/js/API Handler/contract-type-api-handler.js"></script>
 <script src="~/js/popUpHandler.js"></script>
 <script src="~/js/Master/contract-types.js"></script>

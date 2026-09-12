@@ -5,6 +5,7 @@ using PostgreMVCApp.DTO.Create;
 using PostgreMVCApp.DTO.Display;
 using PostgreMVCApp.Models;
 using PostgreMVCApp.Services.EFCore;
+using PostgreMVCApp.Services.EFCore.Master_Data;
 
 namespace PostgreMVCApp.Controllers
 {
@@ -19,10 +20,15 @@ namespace PostgreMVCApp.Controllers
         private readonly EFStatusService statusService;
         private readonly EFRoleService roleService;
         private readonly EFContractTypeService contractTypeService;
-        private readonly int PAGE_SIZE = 5;
+        private readonly EFVendorService vendorService;
+        private readonly EFUserProcDeptService userProcDeptService;
+        private readonly EFGeneralLedgerService glService;
+        private readonly EFMaterialAnaplanService materialAnaplanService;
+        private readonly int PAGE_SIZE = 10;
         public MasterController(EFBranchService service, ModuleCategoryService moduleCategoryService, EFModuleService moduleService, 
             EFProcDeptService procDeptService, EFUserService userService, EFStatusService statusService, EFRoleService roleService,
-            EFContractTypeService contractTypeService)
+            EFContractTypeService contractTypeService, EFVendorService vendorService, EFUserProcDeptService userProcDeptService,
+            EFGeneralLedgerService glService, EFMaterialAnaplanService materialAnaplanService)
         {
             this.service = service;
             this.moduleCategoryService = moduleCategoryService;
@@ -32,6 +38,10 @@ namespace PostgreMVCApp.Controllers
             this.statusService = statusService;
             this.roleService = roleService;
             this.contractTypeService = contractTypeService;
+            this.vendorService = vendorService;
+            this.userProcDeptService = userProcDeptService;
+            this.glService = glService;
+            this.materialAnaplanService = materialAnaplanService;
         }
 
         public IActionResult Index()
@@ -316,6 +326,63 @@ namespace PostgreMVCApp.Controllers
 
         #endregion
 
+        #region User Procurement Departments
+        public async Task<IActionResult> UserProcDepts(int page = 1, string? search = null)
+        {
+            try
+            {
+                var userProcDepts = await userProcDeptService.GetUserProcDeptAsync(page, PAGE_SIZE, search);
+                return View(userProcDepts);
+            }
+            catch(Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return View();
+            }
+
+        }
+        #endregion
+
+        #region General Ledgers
+        public async Task<IActionResult> GeneralLedgers(int page = 1, string? search = null)
+        {
+            try
+            {
+                var generalLedgers = await glService.GetGeneralLedgers(page, PAGE_SIZE, search);
+                return View(generalLedgers);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return View();
+            }
+        }
+        #endregion Material anaplans
+
+
+
+        #region Material Anaplans
+        public async Task<IActionResult> MaterialAnaplans(int page = 1, string? search = null)
+        {
+            try
+            {
+                var materialAnaplans = await materialAnaplanService.GetMaterialAnaplans(page, PAGE_SIZE, search);
+                return View(materialAnaplans);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return View();
+            }
+        }
+
+        [Route("Master/MaterialAnaplan/Create")]
+        public IActionResult CreateMaterialAnaplan()
+        {
+            return View("~/Views/Master/Create/MaterialAnaplanS.cshtml");
+        }
+        #endregion
+
         #region Status
         public async Task<IActionResult> Status(int page = 1, string? search = null)
         {
@@ -494,6 +561,14 @@ namespace PostgreMVCApp.Controllers
         {
             var contractTypes = await contractTypeService.GetContractTypeAsync(page, PAGE_SIZE, search);
             return View(contractTypes);
+        }
+        #endregion
+
+        #region Vendors
+        public async Task<IActionResult> Vendors(int page = 1, string? search = null)
+        {
+            var vendors = await vendorService.GetVendorsPages(page, PAGE_SIZE, search);
+            return View(vendors);
         }
         #endregion
     }

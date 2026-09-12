@@ -1,35 +1,41 @@
-﻿@{
-    Layout = "/Views/Shared/TestLayout.cshtml";
-    ViewData["Title"] = "Master Branch";
+﻿@using PostgreMVCApp.DTO
+@model PagedResult<VendorNonCommercials>;
+@{
+    Layout = "~/Views/Shared/TestLayout.cshtml";
+    ViewData["Title"] = "Master Vendors";
 }
 
-@using PostgreMVCApp.DTO
-@model PagedResult<Branch>
-<div class="col-12 col-xl-10 mx-auto" style="padding: 20px;">
+@if (TempData["Error"] != null)
+{
+    <script>
+        alert('@TempData["Error"]');
+    </script>
+}
+
+<div class="col-12 col-xl-12 mx-auto" style="padding: 20px;">
     @Html.AntiForgeryToken()
     <div class="card shadow-sm">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <div class="card-title fw-bold mb-0">
-                        <i class="fa-solid fa-circle-notch"></i> Master Branch
+                        <i class="fa-solid fa-circle-notch"></i> Master Vendors
                     </div>
-                    <div class="text-muted small">Manage branches</div>
+                    <div class="text-muted small">Manage Vendors</div>
                 </div>
                 <div class="d-flex gap-2">
-                    <form asp-action="Branch" method="get" class="d-flex">
+                    <form asp-action="Vendors" method="get" class="d-flex">
                         <input type="text" name="search" class="form-control" value="@Model?.SearchTerm"
-                               id="searchInput" placeholder="Search branches..." style="width: 250px;margin-right:10px;">
+                               id="searchInput" placeholder="Search vendors..."
+                               style="width: 250px;margin-right:10px;">
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
-
-                    <button class="btn btn-primary" onclick="createNewBranch()">
+                    <button class="btn btn-primary" onclick="createNewContractType()">
                         <i class="fa-solid fa-plus"></i> Add New
                     </button>
                 </div>
             </div>
         </div>
-
         <div class="table-responsive">
             <table class="table table-hover mb-0">
                 <thead class="table-light">
@@ -42,16 +48,18 @@
                 <tbody id="statusTableBody">
                     @if (Model != null && Model.Items.Any())
                     {
-                        @foreach (var branch in Model.Items)
+                        @foreach (var contractType in Model.Items)
                         {
                             <tr>
-                                <td>@branch.Name</td>
-                                <td>@branch.Code</td>
+                                <td>@contractType.Name</td>
+                                <td>@contractType.Code</td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" title="Edit" onclick="editBranch(@branch.Id)">
+                                    <button class="btn btn-sm btn-warning" title="Edit"
+                                            onclick="editContractType(@contractType.Id)">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-danger" title="Delete" onclick="deleteBranch(@branch.Id)">
+                                    <button class="btn btn-sm btn-danger" title="Delete"
+                                            onclick="deleteContractType(@contractType.Id)">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </td>
@@ -62,7 +70,7 @@
                     {
                         <tr>
                             <td colspan="2" class="text-center text-muted py-4">
-                                No Branches found
+                                No Vendors found
                             </td>
                         </tr>
                     }
@@ -79,7 +87,7 @@
 
                 <!-- Previous -->
                 <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
-                    <a class="page-link" asp-action="Branch" asp-route-page="@(Model.PageNumber - 1)"
+                    <a class="page-link" asp-action="Vendors" asp-route-page="@(Model.PageNumber - 1)"
                            asp-route-search="@Model.SearchTerm">
                         Previous
                     </a>
@@ -90,7 +98,8 @@
                 for (int i = 1; i <= totalPages; i++)
                 {
                     <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                        <a class="page-link" asp-action="Branch" asp-route-page="@i" asp-route-search="@Model.SearchTerm">
+                        <a class="page-link" asp-action="Vendors" asp-route-page="@i"
+                               asp-route-search="@Model.SearchTerm">
                             @i
                         </a>
                     </li>
@@ -98,7 +107,7 @@
 
                 <!-- Next -->
                 <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
-                    <a class="page-link" asp-action="Branch" asp-route-page="@(Model.PageNumber + 1)"
+                    <a class="page-link" asp-action="Vendors" asp-route-page="@(Model.PageNumber + 1)"
                            asp-route-search="@Model.SearchTerm">
                         Next
                     </a>
@@ -106,14 +115,10 @@
             }
         </ul>
     </nav>
+
     <a asp-action="Index" asp-controller="Home">
         <input type="button" class="btn btn-primary" value="Back To Home" />
     </a>
 
-    <partial name="_ModalPartial"/>
-
+    <partial name="_ModalPartial" />
 </div>
-
-<script src="~/js/API Handler/brach-api-handler.js"></script>
-<script src="~/js/popUpHandler.js"></script>
-<script src="~/js/Master/branch.js"></script>

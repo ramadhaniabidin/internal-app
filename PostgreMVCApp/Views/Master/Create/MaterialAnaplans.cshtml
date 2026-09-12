@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Create Material Anaplan";
+    Layout = "~/Views/Shared/TestLayout.cshtml";
+}
+
+
+<div class="col-12 col-xl-11 mx-auto" style="padding: 20px;">
+    @Html.AntiForgeryToken()
+    <h2>Insert Material Anaplan</h2>
+    <br />
+    <br />
+    <form>
+        <div class="row">
+            <div class="col-6">
+                <div class="row mb-3">
+                    <label for="codeInput" class="col-sm-5 col-form-label">Code</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="codeInput">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="descriptionInput" class="col-sm-5 col-form-label">Description</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="descriptionInput" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="glCodeInput" class="col-sm-5 col-form-label">GL Code</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="glCodeInput" readonly
+                               onclick="openModal('General Ledgers')" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="glDescriptionInput" class="col-sm-5 col-form-label">GL Description</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="glDescriptionInput" readonly />
+                        <input type="hidden" class="form-control" id="glIdInput" readonly />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="procDeptNameInput" class="col-sm-5 col-form-label">Procurement Department Name</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="procDeptNameInput" readonly
+                               onclick="openModal('Procurement Department')" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="procDeptCodeInput" class="col-sm-5 col-form-label">Procurement Department Code</label>
+                    <div class="col-sm-7">
+                        <input type="hidden" class="form-control" id="procDeptIdInput" readonly />
+                        <input type="text" class="form-control" id="procDeptCodeInput" readonly />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="valuationClassInput" class="col-sm-5 col-form-label">Valuation Class</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="valuationClassInput">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+            </div>
+        </div>
+
+        <partial name="_ModalSelect" />
+
+        <br />
+
+        <button id="btn-submit" type="button" class="btn btn-primary" onclick="submitMaterial()">Submit</button>
+        <a href="/Master/MaterialAnaplans">
+            <input type="button" class="btn btn-danger" value="Cancel" />
+        </a>
+
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/js/Master/material-anaplans.js"></script>
+}

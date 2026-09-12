@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PostgreMVCApp.Models;
+using PostgreMVCApp.Models.Master_Data;
 
 namespace PostgreMVCApp.Data
 {
@@ -18,6 +19,9 @@ namespace PostgreMVCApp.Data
         public DbSet<Role> Roles => Set<Role>();
         public DbSet<VendorNonCommercials> VendorNonCommercials => Set<VendorNonCommercials>();
         public DbSet<ContractType> ContractTypes => Set<ContractType>();
+        public DbSet<UserProcurementDepartment> UserProcurementDepartments => Set<UserProcurementDepartment>();
+        public DbSet<GeneralLedgers> GeneralLedgers => Set<GeneralLedgers>();
+        public DbSet<MaterialAnaplan> MaterialAnaplans => Set<MaterialAnaplan>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

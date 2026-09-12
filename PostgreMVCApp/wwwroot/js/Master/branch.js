@@ -10,14 +10,12 @@ const modalFormControls = [
 ];
 
 function createNewBranch() {
-    openModal(addBranchModalTitle, primaryKeyId, modalFormControls, "btn-save-branch");
+    saveUpdate(addBranchModalTitle, primaryKeyId, modalFormControls, createBranch);
 };
 
 async function editBranch(id) {
-    console.log('Edit branch with id: ', id);
     const branch = await getBranchById(id);
-    console.log('branch data: ', branch);
-    openModal(updateBranchModalTitle, primaryKeyId, modalFormControls, "btn-update-branch", branch);
+    saveUpdate(updateBranchModalTitle, primaryKeyId, modalFormControls, updateBranchAsync, branch);
 };
 
 async function deleteBranch(id) {

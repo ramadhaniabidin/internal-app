@@ -1,8 +1,9 @@
 ﻿@using PostgreMVCApp.DTO
-@model PagedResult<ProcurementDepartment>
+@using PostgreMVCApp.DTO.Display
+@model PagedResult<UserProcDept>;
 @{
     Layout = "~/Views/Shared/TestLayout.cshtml";
-    ViewData["Title"] = "Master Procurement Departments";
+    ViewData["Title"] = "Master User Procurement Department";
 }
 
 @if (TempData["Error"] != null)
@@ -19,56 +20,61 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <div class="card-title fw-bold mb-0">
-                        <i class="fa-solid fa-circle-notch"></i> Master Procurement Departments
+                        <i class="fa-solid fa-circle-notch"></i> Master User Procurement Departments
                     </div>
-                    <div class="text-muted small">Manage Procurement Departments</div>
+                    <div class="text-muted small">Manage user Procurement Departments</div>
                 </div>
                 <div class="d-flex gap-2">
-                    <form asp-action="ProcDept" method="get" class="d-flex">
+                    <form asp-action="UserProcDepts" method="get" class="d-flex">
                         <input type="text" name="search" class="form-control" value="@Model?.SearchTerm"
-                               id="searchInput" placeholder="Search procurement departments..."
+                               id="searchInput" placeholder="Search user..."
                                style="width: 250px;margin-right:10px;">
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
-                    <button class="btn btn-primary" onclick="createNewProcDept()">
+                    <button class="btn btn-primary" onclick="createNew()">
                         <i class="fa-solid fa-plus"></i> Add New
                     </button>
                 </div>
             </div>
         </div>
-
         <div class="table-responsive">
             <table class="table table-hover mb-0">
-                <thead>
+                <thead class="table-light">
                     <tr>
-                        <th>Code</th>
-                        <th>Title</th>
-                        <th>Approver Name</th>
-                        <th>Approver Email</th>
-                        <th>Approver Account</th>
-                        <th>Category</th>
+                        <th>User Account</th>
+                        <th>User Id</th>
+                        <th>User Name</th>
+                        <th>User Email</th>
+                        <th>Proc Dept Id</th>
+                        <th>Proc Dept Code</th>
+                        <th>Proc Dept Name</th>
+                        <th>Branch Code</th>
+                        <th>Branch Name</th>
                         <th style="width: 150px;">Action</th>
                     </tr>
                 </thead>
                 <tbody id="statusTableBody">
                     @if (Model != null && Model.Items.Any())
                     {
-                        foreach (var procDept in Model.Items)
+                        @foreach (var item in Model.Items)
                         {
                             <tr>
-                                <td>@procDept.Code</td>
-                                <td>@procDept.Title</td>
-                                <td>@procDept.Approver_Name</td>
-                                <td>@procDept.Approver_Email</td>
-                                <td>@procDept.Approver_Account</td>
-                                <td>@procDept.Category</td>
+                                <td>@item.UserAccount</td>
+                                <td>@item.UserId</td>
+                                <td>@item.UserFullName</td>
+                                <td>@item.UserEmail</td>
+                                <td>@item.ProcurementDepartmentId</td>
+                                <td>@item.ProcDeptCode</td>
+                                <td>@item.ProcDeptName</td>
+                                <td>@item.BranchCode</td>
+                                <td>@item.BranchName</td>
                                 <td>
                                     <button class="btn btn-sm btn-warning" title="Edit"
-                                            onclick="editProcDept(@procDept.Id)">
+                                            onclick="editContractType(@item.Id)">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
                                     <button class="btn btn-sm btn-danger" title="Delete"
-                                            onclick="deleteProcDept(@procDept.Id)">
+                                            onclick="deleteContractType(@item.Id)">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </td>
@@ -78,8 +84,8 @@
                     else
                     {
                         <tr>
-                            <td colspan="2" class="text-center text-muted py-4">
-                                No Procurement Departments found
+                            <td colspan="11" class="text-center text-muted py-4">
+                                No User Procurement Departments found
                             </td>
                         </tr>
                     }
@@ -87,8 +93,6 @@
             </table>
         </div>
     </div>
-
-
     <nav aria-label="Page navigation" style="padding-top:10px;">
         <ul class="pagination">
             @if (Model != null)
@@ -97,7 +101,7 @@
 
                 <!-- Previous -->
                 <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
-                    <a class="page-link" asp-action="ProcDept" asp-route-page="@(Model.PageNumber - 1)"
+                    <a class="page-link" asp-action="ContractTypes" asp-route-page="@(Model.PageNumber - 1)"
                        asp-route-search="@Model.SearchTerm">
                         Previous
                     </a>
@@ -108,7 +112,8 @@
                 for (int i = 1; i <= totalPages; i++)
                 {
                     <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                        <a class="page-link" asp-action="ProcDept" asp-route-page="@i" asp-route-search="@Model.SearchTerm">
+                        <a class="page-link" asp-action="ContractTypes" asp-route-page="@i"
+                           asp-route-search="@Model.SearchTerm">
                             @i
                         </a>
                     </li>
@@ -116,7 +121,7 @@
 
                 <!-- Next -->
                 <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
-                    <a class="page-link" asp-action="ProcDept" asp-route-page="@(Model.PageNumber + 1)"
+                    <a class="page-link" asp-action="ContractTypes" asp-route-page="@(Model.PageNumber + 1)"
                        asp-route-search="@Model.SearchTerm">
                         Next
                     </a>
@@ -124,15 +129,13 @@
             }
         </ul>
     </nav>
+
     <a asp-action="Index" asp-controller="Home">
         <input type="button" class="btn btn-primary" value="Back To Home" />
     </a>
 
     <partial name="_ModalPartial" />
+
 </div>
 
-
-<script src="~/js/API Handler/proc-dept-api-handler.js"></script>
-<script src="~/js/popUpHandler.js"></script>
-<script src="~/js/Master/proc-dept.js"></script>
-
+<script src="~/js/Master/user-proc-dept.js"></script>

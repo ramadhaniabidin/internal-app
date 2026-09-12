@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PostgreMVCApp.Data;
 using PostgreMVCApp.Services.EFCore;
+using PostgreMVCApp.Services.EFCore.Master_Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,10 @@ builder.Services.AddScoped<EFProcDeptService>();
 builder.Services.AddScoped<EFStatusService>();
 builder.Services.AddScoped<EFRoleService>();
 builder.Services.AddScoped<EFContractTypeService>();
+builder.Services.AddScoped<EFVendorService>();
+builder.Services.AddScoped<EFUserProcDeptService>();
+builder.Services.AddScoped<EFGeneralLedgerService>();
+builder.Services.AddScoped<EFMaterialAnaplanService>();
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

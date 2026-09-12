@@ -21,27 +21,28 @@
                 <div class="row mb-3">
                     <label for="inputPassword3" class="col-sm-4 col-form-label">Status</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="statusInput" readonly disabled/>
+                        <input type="text" class="form-control" id="statusInput" readonly disabled />
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="inputPassword3" class="col-sm-4 col-form-label">Request Date</label>
                     <div class="col-sm-8">
-                        <input type="date" class="form-control" id="requestDateInput" readonly disabled/>
+                        <input type="date" class="form-control" id="requestDateInput" readonly disabled />
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="inputPassword3" class="col-sm-4 col-form-label">Requester Name</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="requesterNameInput" readonly disabled/>
+                        <input type="text" class="form-control" id="requesterNameInput" readonly disabled />
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="inputPassword3" class="col-sm-4 col-form-label">Procurement Department</label>
                     <div class="col-sm-8">
-                        <select class="form-select" id="procurementDeptSelect" aria-label="Default select example">
-                            <option selected value="">Select Procurement Department</option>
-                        </select>
+                        <input type="text" class="form-control" id="procDeptNameInput" readonly
+                               onclick="openModal('Procurement Department')" />
+                        <input type="text" class="form-control" id="procDeptIdInput" hidden />
+                        <input type="text" class="form-control" id="procDeptCodeInput" hidden />
                     </div>
                 </div>
             </div>
@@ -59,13 +60,16 @@
                 <div class="row mb-3">
                     <label for="vendorName" class="col-sm-4 col-form-label">Vendor Name</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="vendorNameInput" readonly />
+                        <input type="text" class="form-control" id="vendorNameInput" readonly
+                               onclick="openModal('Vendor')" />
+                        <input type="text" class="form-control" id="vendorCodeInput" hidden />
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label for="contractType" class="col-sm-4 col-form-label">Contract Type</label>
                     <div class="col-sm-8">
                         <select class="form-select" id="contractTypeSelect" aria-label="Default select example">
+                            <option selected value="">Select Contract Type</option>
                         </select>
                     </div>
                 </div>
@@ -82,19 +86,54 @@
                 <div class="row mb-3">
                     <label for="branch" class="col-sm-4 col-form-label">Branch</label>
                     <div class="col-sm-8">
-                        <select class="form-select" id="branchSelect" aria-label="Default select example">
-                        </select>
+                        <input type="text" class="form-control" id="branchNameInput" readonly required disabled />
+                        <input type="text" class="form-control" id="branchCodeInput" hidden />
+                        <input type="text" class="form-control" id="branchIdInput" hidden />
                     </div>
                 </div>
             </div>
         </div>
 
-        <button id="createNewBtn" type="button" class="btn btn-primary" onclick="createNew()">Create New</button>
-        <button type="submit" class="btn btn-primary">Search</button>
+        <div class="row">
+            <div class="table-responsive">
+                <table id="detailTable" class="table table-bordered table-hover align-middle">
+                    <thead class="text-center">
+                        <tr class="table-primary"">
+                            <th style="width: 5%;">No</th>
+                            <th>Material</th>
+                            <th>Contract Amount</th>
+                            <th style="width: 10%;">Variable Amount</th>
+                            <th style=" width: 5%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailTableBody">
+
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-start mt-3">
+                    <button type="button" class="btn btn-primary" onclick="addDetailItem()">
+                        <i class="bi bi-plus-lg me-1"></i> Add New Row
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <partial name="_ModalSelect" />
+
+        <div class="row">
+
+        </div>
+
+        <br />
+
+        <button id="btn-submit" type="button" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-primary">Save as Draft</button>
     </form>
 </div>
 
 @section Scripts {
+    <script src="~/js/API Handler/contract-api-handler.js"></script>
     <script src="~/js/Non Commercials/contract.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -102,7 +141,7 @@
         const data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
 
         // Pass the data into the external function
-            initializePage(data);
+        initializePage(data);
         });
     </script>
 }

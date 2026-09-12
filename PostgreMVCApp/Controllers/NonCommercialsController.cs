@@ -17,6 +17,7 @@ namespace PostgreMVCApp.Controllers
         private readonly EFModuleService moduleService;
         private readonly EFStatusService statusService;
         private readonly EFRoleService roleService;
+        private readonly EFContractTypeService contractTypeService;
         private readonly List<int> contractApproverRoleIds;
         private readonly List<int> prApproverRoleIds;
         private readonly List<int> qcfApproverRoleIds;
@@ -26,7 +27,9 @@ namespace PostgreMVCApp.Controllers
             EFBranchService branchService, EFProcDeptService procDeptService, 
             EFModuleService moduleService, 
             EFStatusService statusService,
-            EFRoleService roleService)
+            EFRoleService roleService,
+            EFVendorService vendorService,
+            EFContractTypeService contractTypeService)
         {
             contractApproverRoleIds = configuration.GetSection("AppSettings:ContractApproverRoleIds").Get<List<int>>() ?? [];
             prApproverRoleIds = configuration.GetSection("AppSettings:PRApproverRoleIds").Get<List<int>>() ?? [];
@@ -38,6 +41,7 @@ namespace PostgreMVCApp.Controllers
             this.moduleService = moduleService;
             this.statusService = statusService;
             this.roleService = roleService;
+            this.contractTypeService = contractTypeService;
         }
 
         public IActionResult Index()
@@ -54,10 +58,12 @@ namespace PostgreMVCApp.Controllers
 
         public async Task<IActionResult> Contract()
         {
+            var contractTypes = await contractTypeService.GetContractTypeAsync(1, 30, "");
             var model = new CreateContract
             {
                 Branches = await branchService.GetActiveBranchesAsync(),
-                ProcurementDepartments = await procDeptService.GetAllProcDeptsAsync()
+                ProcurementDepartments = await procDeptService.GetAllProcDeptsAsync(),
+                ContractTypes = contractTypes.Items
             };
             return View(model);
         }
