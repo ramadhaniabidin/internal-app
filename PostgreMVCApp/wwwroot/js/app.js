@@ -380,6 +380,43 @@ function wireUserActions() {
     // if (btnLogout) btnLogout.addEventListener('click', () => alert('Logging out (stub). Replace with your real logout route.'));
 };
 
+
+// =========================
+// Thousand separators
+// =========================
+function toNumber(val) {
+    if (!val) return 0;
+    return parseFloat(val.toString().replace(/,/g, '')) || 0;
+};
+
+function addCommas(nStr) {
+    nStr += '';
+    let x = nStr.split('.');
+    let x1 = x[0];
+    let x2 = x.length > 1 ? '.' + x[1] : '';
+    let rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+};
+
+function toFormatted(val) {
+    return addCommas(toNumber(val));
+};
+
+function OnlyNumbers(evt) {
+    let charCode = (evt.which) ? evt.which : event.keyCode;
+    if (charCode != 46 && charCode > 31
+    && (charCode < 45 || charCode > 57)) {
+        evt.preventDefault();
+        return false;
+    }
+    return true;
+};
+
+
+
 // =========================
 // Init
 // =========================
