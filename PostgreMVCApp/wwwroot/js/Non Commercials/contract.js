@@ -83,7 +83,7 @@ let detailItemSchema = {
         {
             name: "contractAmount",
             inputs: [
-                { name: "contractAmount", type: 'number', value: 0, readOnly: false }
+                { name: "contractAmount", type: 'text', value: 0, readOnly: false }
             ],
             type: "text", value: 0
         },
@@ -138,6 +138,15 @@ function renderDetailInput(inp, index) {
         input.onclick = () => {
             openModal(inp.popUp, index);
         };
+    }
+    if (inp.name === 'contractAmount') {
+        input.addEventListener('keypress', function (event) {
+            OnlyNumbers(event);
+        });
+        input.addEventListener('blur', function () {
+            input.value = toFormatted(input.value);
+            inp.value = input.value;
+        });
     }
 
     if (inp.type === 'checkbox') {
