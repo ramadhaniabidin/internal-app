@@ -5,6 +5,7 @@ using PostgreMVCApp.DTO.Display;
 using PostgreMVCApp.Models;
 using PostgreMVCApp.Models.Master_Data;
 using System.Net;
+using System.Net.Http.Headers;
 
 namespace PostgreMVCApp.Helpers
 {
@@ -62,7 +63,7 @@ namespace PostgreMVCApp.Helpers
                 Dictionary<string, string?> queryParams = GetQueryParams(pageNumber, pageSize, search);
                 string url = QueryHelpers.AddQueryString("/api/Vendor", queryParams);
                 using var request = new HttpRequestMessage(HttpMethod.Get, url);
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetToken());
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
                 var response = await _httpClient.SendAsync(request);
                 if (response.IsSuccessStatusCode)
                 {
@@ -92,7 +93,7 @@ namespace PostgreMVCApp.Helpers
                 Dictionary<string, string?> queryParams = GetQueryParams(pageNumber, pageSize, search);
                 string url = QueryHelpers.AddQueryString("/api/ContractType", queryParams);
                 using var request = new HttpRequestMessage(HttpMethod.Get, url);
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetToken());
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
                 var response = await _httpClient.SendAsync(request);
 
                 if (response.IsSuccessStatusCode)
@@ -123,7 +124,7 @@ namespace PostgreMVCApp.Helpers
                 Dictionary<string, string?> queryParams = GetQueryParams(pageNumber, pageSize, search);
                 string url = QueryHelpers.AddQueryString("/api/UserProcDept", queryParams);
                 using var request = new HttpRequestMessage(HttpMethod.Get, url);
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetToken());
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
                 var response = await _httpClient.SendAsync(request);
 
                 if (response.IsSuccessStatusCode)
@@ -157,7 +158,7 @@ namespace PostgreMVCApp.Helpers
             };
             string url = QueryHelpers.AddQueryString("/api/GeneralLedger", queryParams);
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetToken());
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
             using(var response = await _httpClient.SendAsync(request))
             {
                 if (response.IsSuccessStatusCode)
@@ -187,7 +188,7 @@ namespace PostgreMVCApp.Helpers
             };
             string url = QueryHelpers.AddQueryString("/api/MaterialAnaplan", queryParams);
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetToken());
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
             using (var response = await _httpClient.SendAsync(request))
             {
                 if (response.IsSuccessStatusCode)
@@ -207,6 +208,30 @@ namespace PostgreMVCApp.Helpers
             }
         }
 
+        public async Task<MaterialAnaplanDisplay> GetMaterialById(int id)
+        {
+            string endpoint = $"/api/MaterialAnaplan/id/{id}";
+            using var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
+            using (var response = await _httpClient.SendAsync(request))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadFromJsonAsync<MaterialAnaplanDisplay>();
+                    return data ?? new ();
+                }
+                else if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return new();
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new InvalidOperationException($"Failed to fetch Material Anaplan: {response.StatusCode} - {error}");
+                }
+            }
+        }
+
         public async Task<PagedResult<Branch>> GetBranchesPaged(int pageNumber, int pageSize, string? search)
         {
             try
@@ -214,7 +239,7 @@ namespace PostgreMVCApp.Helpers
                 Dictionary<string, string?> queryParams = GetQueryParams(pageNumber, pageSize, search);
                 string url = QueryHelpers.AddQueryString("/api/Branch", queryParams);
                 using var request = new HttpRequestMessage(HttpMethod.Get, url);
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", await GetToken());
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
                 var response = await _httpClient.SendAsync(request);
                 if (response.IsSuccessStatusCode)
                 {

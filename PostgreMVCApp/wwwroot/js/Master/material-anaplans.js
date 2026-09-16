@@ -58,6 +58,18 @@ async function submitMaterial() {
     await submitMaterialAsync(payload);
 };
 
+async function editMaterial() {
+    const payload = {
+        Code: $("#codeInput").val(),
+        Description: $("#descriptionInput").val(),
+        GeneralLedgerId: $("#glIdInput").val(),
+        ProcurementDepartmentId: $("#procDeptIdInput").val(),
+        ValuationClass: $("#valuationClassInput").val()
+    };
+    console.log('Payload: ', payload);
+    await editMaterialAsync(payload);
+};
+
 async function submitMaterialAsync(payload) {
     try {
         const token = await getToken();
@@ -77,6 +89,32 @@ async function submitMaterialAsync(payload) {
             return;
         }
         showSuccessToast('Success create Material Anaplan');
+        closeModal();
+        goToMasterPage();
+    } catch (err) {
+        showErrorToast(err);
+    }
+};
+
+async function editMaterialAsync(payload) {
+    try {
+        const token = await getToken();
+        const endpoint = generateEndpoint(null, null, null, '/api/MaterialAnaplan');
+        console.log('endpoint: ', endpoint);
+        const response = await fetch(endpoint, {
+            method: putMethod,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': contentType
+            },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            showErrorToast(errorMessage);
+            return;
+        }
+        showSuccessToast('Success edit Material Anaplan');
         closeModal();
         goToMasterPage();
     } catch (err) {

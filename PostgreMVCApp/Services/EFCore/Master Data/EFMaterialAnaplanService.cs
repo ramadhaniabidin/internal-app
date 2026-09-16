@@ -13,5 +13,10 @@ namespace PostgreMVCApp.Services.EFCore.Master_Data
         {
             return await _apiHelper.GetMaterialAnaplans(pageNumber, pageSize, search);
         }
+
+        public async Task<MaterialAnaplanDisplay> GetMaterialById(int id)
+        {
+            return await _apiHelper.GetMaterialById(id);
+        }
     }
 }
