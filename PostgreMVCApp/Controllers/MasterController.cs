@@ -381,6 +381,13 @@ namespace PostgreMVCApp.Controllers
         {
             return View("~/Views/Master/Create/MaterialAnaplanS.cshtml");
         }
+
+        [Route("Master/MaterialAnaplan/Edit/{id}")]
+        public async Task<IActionResult> EditMaterialAnaplan(int id)
+        {
+            var data = await materialAnaplanService.GetMaterialById(id);
+            return View("~/Views/Master/Edit/MaterialAnaplans.cshtml", data);
+        }
         #endregion
 
         #region Status

@@ -61,12 +61,19 @@
                                 <td>@item.ProcDeptCode - @item.ProcDeptName</td>
                                 <td>@item.GeneralLedgerCode - @item.GeneralLedgerDescription</td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" title="Edit" onclick="updateGL(@item.Id)">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" title="Delete" onclick="deleteGL(@item.Id)">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
+                                    <div class="d-flex gap-1">
+                                        <form asp-action="EditMaterialAnaplan" asp-controller="Master" asp-route-id="@item.Id">
+                                            <button type="submit" class="btn btn-sm btn-warning" title="Edit">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                        </form>
+                                        <form asp-action="EditMaterialAnaplan" asp-controller="Master">
+                                            <button type="button" class="btn btn-sm btn-danger" title="Delete"
+                                                    onclick="deleteGL(@item.Id)">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -128,4 +135,4 @@
 
 </div>
 
-<script src="~/js/Master/general-ledgers.js"></script>
+<script src="~/js/Master/material-anaplans.js"></script>
