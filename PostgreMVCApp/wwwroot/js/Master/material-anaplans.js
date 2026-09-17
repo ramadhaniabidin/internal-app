@@ -70,6 +70,12 @@ async function editMaterial() {
     await editMaterialAsync(payload);
 };
 
+async function deleteMaterial(id) {
+    if (confirm('Are you sure want to delete this material?')) {
+        await deleteMaterialAsync(id);
+    }
+};
+
 async function submitMaterialAsync(payload) {
     try {
         const token = await getToken();
@@ -119,6 +125,32 @@ async function editMaterialAsync(payload) {
         goToMasterPage();
     } catch (err) {
         showErrorToast(err);
+    }
+};
+
+async function deleteMaterialAsync(id) {
+    try {
+        const token = await getToken();
+        const endpoint = new URL(`${baseUrl}/api/MaterialAnaplan/id/${id}`);
+        console.log('endpoint: ', endpoint);
+        const response = await fetch(endpoint, {
+            method: deleteMethod,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': contentType
+            }
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            showErrorToast(errorMessage);
+            return;
+        }
+        showSuccessToast('Success delete Material Anaplan');
+        closeModal();
+        goToMasterPage();
+    } catch (err) {
+        console.error("Error deleting material anaplan:", err);
     }
 };
 
@@ -342,7 +374,6 @@ function generateButtonSelect(item) {
 };
 
 async function search() {
-    const modal = modals[popUpModule];
     popUpSearchBy = document.getElementById("popUpSearchBy").value;
     popUpKeyword = document.getElementById("popUpSearchKeyword").value;
     popUpItems = await fetchPopUpItems();

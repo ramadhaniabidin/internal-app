@@ -67,9 +67,8 @@
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
                                         </form>
-                                        <form asp-action="EditMaterialAnaplan" asp-controller="Master">
-                                            <button type="button" class="btn btn-sm btn-danger" title="Delete"
-                                                    onclick="deleteGL(@item.Id)">
+                                        <form asp-action="DeleteMaterialAnaplan" asp-controller="Master" asp-route-id="@item.Id">
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
@@ -82,7 +81,7 @@
                     {
                         <tr>
                             <td colspan="11" class="text-center text-muted py-4">
-                                No General Ledgers found
+                                No Material Anaplans found
                             </td>
                         </tr>
                     }

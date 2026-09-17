@@ -388,6 +388,13 @@ namespace PostgreMVCApp.Controllers
             var data = await materialAnaplanService.GetMaterialById(id);
             return View("~/Views/Master/Edit/MaterialAnaplans.cshtml", data);
         }
+
+        [Route("Master/MaterialAnaplan/Delete/{id}")]
+        public async Task<IActionResult> DeleteMaterialAnaplan(int id)
+        {
+            var data = await materialAnaplanService.GetMaterialById(id);
+            return View("~/Views/Master/Delete/MaterialAnaplans.cshtml", data);
+        }
         #endregion
 
         #region Status
