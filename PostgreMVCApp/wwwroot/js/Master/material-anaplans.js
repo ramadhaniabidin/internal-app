@@ -13,6 +13,15 @@ const getMethod = 'GET';
 const putMethod = 'PUT';
 const deleteMethod = 'DELETE';
 
+const emptyItems = {
+    'items': [],
+    'pageNumber': null,
+    'pageSize': null,
+    'searchTerm': '',
+    'totalCount': null,
+    'totalPages': 1
+};
+
 
 const modals = {
     'General Ledgers': {
@@ -278,21 +287,23 @@ function renderPopUpTableBody(items) {
     const columns = tableColumns.find(t => t.Module === popUpModule).Columns;
     const tbody = document.createElement("tbody");
     tbody.id = "pop-up-table-body";
-    for (const item of items) {
-        const tr1 = document.createElement("tr");
-        for (const column of columns) {
-            const td = document.createElement("td");
-            const text = item[column.DBColumn];
+    if (items.length) {
+        for (const item of items) {
+            const tr1 = document.createElement("tr");
+            for (const column of columns) {
+                const td = document.createElement("td");
+                const text = item[column.DBColumn];
 
-            if (text) {
-                td.textContent = text;
-            } else {
-                td.appendChild(generateButtonSelect(item));
+                if (text) {
+                    td.textContent = text;
+                } else {
+                    td.appendChild(generateButtonSelect(item));
+                }
+
+                tr1.appendChild(td);
             }
-
-            tr1.appendChild(td);
+            tbody.appendChild(tr1);
         }
-        tbody.appendChild(tr1);
     }
     return tbody;
 };
@@ -426,7 +437,7 @@ function appendTableBody(items) {
 function displayModalFooterText(totalCount, pageSize, pageIndex) {
     const totalPage = Math.ceil(totalCount / pageSize);
     const textFooter = document.getElementById("footer-text");
-    textFooter.textContent = `Page ${pageIndex} of ${totalPage} : ${totalCount} records`;
+    textFooter.textContent = `Page ${pageIndex} of ${totalPage ? totalPage : 1} : ${totalCount} records`;
 };
 
 async function fetchPopUpItems() {
