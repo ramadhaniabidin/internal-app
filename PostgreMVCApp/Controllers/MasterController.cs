@@ -362,11 +362,11 @@ namespace PostgreMVCApp.Controllers
 
 
         #region Material Anaplans
-        public async Task<IActionResult> MaterialAnaplans(int page = 1, string? search = null)
+        public async Task<IActionResult> MaterialAnaplans(int page = 1, string? searchBy = null, string? keyword = null)
         {
             try
             {
-                var materialAnaplans = await materialAnaplanService.GetMaterialAnaplans(page, PAGE_SIZE, search);
+                var materialAnaplans = await materialAnaplanService.GetMaterialAnaplans(page, PAGE_SIZE, searchBy, keyword);
                 return View(materialAnaplans);
             }
             catch (Exception ex)

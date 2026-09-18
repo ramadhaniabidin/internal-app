@@ -178,13 +178,14 @@ namespace PostgreMVCApp.Helpers
             }
         }
 
-        public async Task<PagedResult<MaterialAnaplanDisplay>> GetMaterialAnaplans(int pageNumber, int pageSize, string? search)
+        public async Task<PagedResult<MaterialAnaplanDisplay>> GetMaterialAnaplans(int pageNumber, int pageSize, string? searchBy, string? keyword)
         {
             var queryParams = new Dictionary<string, string?>
             {
                 ["pageNumber"] = pageNumber.ToString(),
                 ["pageSize"] = pageSize.ToString(),
-                ["keyword"] = search
+                ["searchBy"] = searchBy,
+                ["keyword"] = keyword
             };
             string url = QueryHelpers.AddQueryString("/api/MaterialAnaplan", queryParams);
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -198,7 +199,7 @@ namespace PostgreMVCApp.Helpers
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    return ReturnEmptyItems<MaterialAnaplanDisplay>(pageNumber, pageSize, search);
+                    return ReturnEmptyItems<MaterialAnaplanDisplay>(pageNumber, pageSize, searchBy, keyword);
                 }
                 else
                 {
@@ -271,6 +272,18 @@ namespace PostgreMVCApp.Helpers
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 SearchTerm = search
+            };
+        }
+
+        private PagedResult<T> ReturnEmptyItems<T>(int pageNumber, int pageSize, string? searchBy, string? keyword)
+        {
+            return new PagedResult<T>
+            {
+                Items = new List<T>(),
+                TotalCount = 0,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SearchTerm = $"{searchBy} {keyword}"
             };
         }
 
