@@ -13,6 +13,15 @@ const getMethod = 'GET';
 const putMethod = 'PUT';
 const deleteMethod = 'DELETE';
 
+const emptyItems = {
+    'items': [],
+    'pageNumber': null,
+    'pageSize': null,
+    'searchTerm': '',
+    'totalCount': null,
+    'totalPages': 1
+};
+
 
 const modals = {
     'General Ledgers': {
@@ -70,6 +79,12 @@ async function editMaterial() {
     await editMaterialAsync(payload);
 };
 
+async function deleteMaterial(id) {
+    if (confirm('Are you sure want to delete this material?')) {
+        await deleteMaterialAsync(id);
+    }
+};
+
 async function submitMaterialAsync(payload) {
     try {
         const token = await getToken();
@@ -119,6 +134,32 @@ async function editMaterialAsync(payload) {
         goToMasterPage();
     } catch (err) {
         showErrorToast(err);
+    }
+};
+
+async function deleteMaterialAsync(id) {
+    try {
+        const token = await getToken();
+        const endpoint = new URL(`${baseUrl}/api/MaterialAnaplan/id/${id}`);
+        console.log('endpoint: ', endpoint);
+        const response = await fetch(endpoint, {
+            method: deleteMethod,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': contentType
+            }
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            showErrorToast(errorMessage);
+            return;
+        }
+        showSuccessToast('Success delete Material Anaplan');
+        closeModal();
+        goToMasterPage();
+    } catch (err) {
+        console.error("Error deleting material anaplan:", err);
     }
 };
 
@@ -246,21 +287,23 @@ function renderPopUpTableBody(items) {
     const columns = tableColumns.find(t => t.Module === popUpModule).Columns;
     const tbody = document.createElement("tbody");
     tbody.id = "pop-up-table-body";
-    for (const item of items) {
-        const tr1 = document.createElement("tr");
-        for (const column of columns) {
-            const td = document.createElement("td");
-            const text = item[column.DBColumn];
+    if (items.length) {
+        for (const item of items) {
+            const tr1 = document.createElement("tr");
+            for (const column of columns) {
+                const td = document.createElement("td");
+                const text = item[column.DBColumn];
 
-            if (text) {
-                td.textContent = text;
-            } else {
-                td.appendChild(generateButtonSelect(item));
+                if (text) {
+                    td.textContent = text;
+                } else {
+                    td.appendChild(generateButtonSelect(item));
+                }
+
+                tr1.appendChild(td);
             }
-
-            tr1.appendChild(td);
+            tbody.appendChild(tr1);
         }
-        tbody.appendChild(tr1);
     }
     return tbody;
 };
@@ -342,7 +385,6 @@ function generateButtonSelect(item) {
 };
 
 async function search() {
-    const modal = modals[popUpModule];
     popUpSearchBy = document.getElementById("popUpSearchBy").value;
     popUpKeyword = document.getElementById("popUpSearchKeyword").value;
     popUpItems = await fetchPopUpItems();
@@ -395,7 +437,7 @@ function appendTableBody(items) {
 function displayModalFooterText(totalCount, pageSize, pageIndex) {
     const totalPage = Math.ceil(totalCount / pageSize);
     const textFooter = document.getElementById("footer-text");
-    textFooter.textContent = `Page ${pageIndex} of ${totalPage} : ${totalCount} records`;
+    textFooter.textContent = `Page ${pageIndex} of ${totalPage ? totalPage : 1} : ${totalCount} records`;
 };
 
 async function fetchPopUpItems() {
