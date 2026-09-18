@@ -8,6 +8,7 @@ let totalPages = 0;
 let popUpSearchBy = "";
 let popUpKeyword = "";
 let currentUser = {};
+let detailRowNumber;
 
 let tableColumns = [
     {
@@ -97,7 +98,7 @@ let detailItemSchema = {
 };
 
 let detailItems = [
-    detailItemSchema
+    structuredClone(detailItemSchema)
 ];
 
 function initializePage(data) {
@@ -131,11 +132,21 @@ function renderDetailInput(inp, index) {
 
     input.type = inp.type;
     input.name = `${inp.name}_${index}`;
+    input.id = `${inp.name}_${index}`;
     if (inp.readOnly) input.readOnly = true;
     if (inp.popUp) {
         input.onclick = () => {
-            openModal(inp.popUp);
+            openModal(inp.popUp, index);
         };
+    }
+    if (inp.name === 'contractAmount') {
+        input.addEventListener('keypress', function (event) {
+            OnlyNumbers(event);
+        });
+        input.addEventListener('blur', function () {
+            input.value = toFormatted(input.value);
+            inp.value = input.value;
+        });
     }
 
     if (inp.type === 'checkbox') {
@@ -162,7 +173,6 @@ function renderDetailItems() {
 
     detailItems.forEach((detail, index) => {
         const tr = document.createElement('tr');
-
         detail.fields.forEach((field) => {
             const td = document.createElement('td');
             td.className = 'text-center align-middle';
@@ -172,7 +182,6 @@ function renderDetailItems() {
             });
             tr.appendChild(td);
         });
-
         tr.appendChild(renderDeleteAction(index));
         tbody.appendChild(tr);
     });
@@ -182,8 +191,8 @@ function addDetailItem() {
     const newItem = {
         id: Date.now(),
         fields: structuredClone(detailItemSchema.fields)
-    };
 
+    };
     detailItems.push(newItem);
     renderDetailItems();
 };
@@ -235,11 +244,17 @@ function selectItemPopUpDetail(item, index) {
     const targetSourceColumns = modals[popUpModule].targetSourceColumn;
 
     for (let i = 0; i < targetFields.length; i++) {
+        console.log('Target field: ', targetFields[i]);
         const fieldId = targetFields[i] + `_${index}`;
         const fieldValue = item[targetSourceColumns[i]];
         $("#" + fieldId).val(fieldValue);
+        detailItems[index].fields.forEach(det => {
+            const targetDetailField = det.inputs.find(x => x.name === targetFields[i]);
+            if (targetDetailField !== null && targetDetailField !== undefined) {
+                targetDetailField.value = fieldValue;
+            }
+        });
     }
-
     closeModal();
 };
 
@@ -286,17 +301,17 @@ function displayModalFooterText(totalCount, pageSize, pageIndex) {
     textFooter.textContent = `Page ${pageIndex} of ${totalPage} : ${totalCount} records`;
 };
 
-async function popUpVendorNext() {
+async function popUpNext() {
     if (pageIndex < totalPages) {
         pageIndex++;
     }
     const modal = modals[popUpModule];
     popUpItems = await fetchPopUpItems();
-    appendTableBody(popUpItems.items, index);
+    appendTableBody(popUpItems.items);
     displayModalFooterText(popUpItems.totalCount, pageSize, pageIndex);
 };
 
-async function popUpVendorPrev() {
+async function popUpPrev() {
     if (pageIndex > 1) {
         pageIndex--;
     }
@@ -329,10 +344,10 @@ function openModalDialog(module) {
     document.getElementById('modal-body').innerHTML = "";
 };
 
-async function openModal(module) {
+async function openModal(module, detailIndex = null) {
+    if (detailIndex !== null && detailIndex !== undefined) detailRowNumber = detailIndex;
     popUpModule = module;
     const modal = modals[module];
-    console.log('modal meta data: ', modal);
     openModalDialog(module);
     renderModalSearchForm();
 
@@ -355,52 +370,17 @@ function renderModalBody(items, pageIndex, pageSize, totalCount) {
     const tableDiv = document.createElement("div");
     tableDiv.className = "table-responsive";
     tableDiv.id = "table-div";
-
     const table = document.createElement("table");
     table.className = "table table-hover mb-0";
-
     const thead = renderPopUpBodyTableHead();
-
     const tbody = document.createElement("tbody");
     tbody.id = "pop-up-table-body";
-
-
-
     table.appendChild(thead);
     table.appendChild(tbody);
-
-    
-
     tableDiv.appendChild(table);
-    modalBody.appendChild(tbody);
+    modalBody.appendChild(tableDiv);
     appendTableBody(items);
     displayModalFooterText(totalCount, pageSize, pageIndex);
-
-
-
-
-
-    // const tableDiv = renderPopUpBodyTableWrapper(items);
-    // modalBody.appendChild(tableDiv);
-    // displayModalFooterText(totalCount, pageSize, pageIndex);
-};
-
-function renderPopUpBodyTableWrapper(items) {
-    const thead = renderPopUpBodyTableHead();
-    const tbody = renderPopUpTableBody(items);
-    const tableDiv = document.createElement("div");
-    tableDiv.className = "table-responsive";
-    tableDiv.id = "table-div";
-
-    const table = document.createElement("table");
-    table.className = "table table-hover mb-0";
-
-    table.appendChild(thead);
-    table.appendChild(tbody);
-
-    tableDiv.appendChild(table);
-
-    return tableDiv;
 };
 
 function renderPopUpBodyTableHead() {
@@ -415,29 +395,6 @@ function renderPopUpBodyTableHead() {
     }
     thead.appendChild(tr);
     return thead;
-};
-
-function renderPopUpTableBody(items) {
-    const columns = tableColumns.find(t => t.Module === popUpModule).Columns;
-    const tbody = document.createElement("tbody");
-    tbody.id = "pop-up-table-body";
-    for (const item of items) {
-        const tr1 = document.createElement("tr");
-        for (const column of columns) {
-            const td = document.createElement("td");
-            const text = item[column.DBColumn];
-
-            if (text) {
-                td.textContent = text;
-            } else {
-                td.appendChild(generateButtonSelect(item));
-            }
-
-            tr1.appendChild(td);
-        }
-        tbody.appendChild(tr1);
-    }
-    return tbody;
 };
 
 function appendTableBody(items) {
@@ -463,7 +420,6 @@ function appendTableBody(items) {
 };
 
 function generateButtonSelect(item) {
-    console.log('pop up module: ', popUpModule);
     const button = document.createElement("button");
     button.innerHTML = "SELECT";
     button.className = "btn btn-primary";
@@ -471,7 +427,7 @@ function generateButtonSelect(item) {
 
     if (popUpModule === 'Material Anaplan') {
         button.onclick = () => {
-            selectItemPopUpDetail(item);
+            selectItemPopUpDetail(item, detailRowNumber);
         };
     }
     else {
@@ -487,7 +443,6 @@ async function fetchPopUpItems() {
         popUpSearchBy += ';Email';
         popUpKeyword += ';' + currentUser['email'];
     }
-
     const modal = modals[popUpModule];
     let items = await getVendors(pageIndex, popUpSearchBy, popUpKeyword, modal.endpoint);
     console.log('Items: ', items);
@@ -583,10 +538,13 @@ function closeModal() {
     }, 300);
 };
 
-
+function formatNumber(num) {
+    if (isNaN(num)) {
+        throw new Error('Input must be a valid number');
+    }
+};
 
 async function search(index) {
-    const modal = modals[popUpModule];
     popUpSearchBy = document.getElementById("popUpSearchBy").value;
     popUpKeyword = document.getElementById("popUpSearchKeyword").value;
     popUpItems = await fetchPopUpItems();

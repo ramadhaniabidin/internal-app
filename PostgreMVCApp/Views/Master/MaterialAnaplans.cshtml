@@ -26,106 +26,122 @@
                 </div>
                 <div class="d-flex gap-2">
                     <form asp-action="MaterialAnaplans" method="get" class="d-flex">
-                        <input type="text" name="search" class="form-control" value="@Model?.SearchTerm"
-                               id="searchInput" placeholder="Search material anaplans..."
-                               style="width: 250px;margin-right:10px;">
-                        <button type="submit" class="btn btn-secondary">Search</button>
-                    </form>
-                    <form asp-action="CreateMaterialAnaplan" asp-controller="Master">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa-solid fa-plus"></i> Add New
-                        </button>
-                    </form>
+                        <select name="searchBy" id="searchBy" class="form-select" style="margin-right: 10px;">
+                            <option value="code" selected="@(Model?.SearchBy == "code")">Code</option>
+                            <option value="description"
+                                    selected="@(Model?.SearchBy == "description" || string.IsNullOrEmpty(Model?.SearchBy))">
+                                Description</option>
+                                <option value="procdept" selected="@(Model?.SearchBy == "procdept")">Procurement Department
+                                </option>
+                                <option value="gl" selected="@(Model?.SearchBy == "gl")">General Ledgers</option>
+                            </select>
+                            <input type="text" name="keyword" class="form-control" value="@Model?.SearchTerm"
+                                   id="searchInput" placeholder="Search material anaplans..."
+                                   style="width: 250px;margin-right:10px;">
+                            <button type="submit" class="btn btn-secondary">Search</button>
+                        </form>
+                        <form asp-action="CreateMaterialAnaplan" asp-controller="Master">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa-solid fa-plus"></i> Add New
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Code</th>
-                        <th>Description</th>
-                        <th>Procurement Department</th>
-                        <th>General Ledgers</th>
-                        <th style="width: 150px;">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="statusTableBody">
-                    @if (Model != null && Model.Items.Any())
-                    {
-                        @foreach (var item in Model.Items)
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Procurement Department</th>
+                            <th>General Ledgers</th>
+                            <th style="width: 150px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statusTableBody">
+                        @if (Model != null && Model.Items.Any())
+                        {
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td>@item.Code</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.ProcDeptCode - @item.ProcDeptName</td>
+                                    <td>@item.GeneralLedgerCode - @item.GeneralLedgerDescription</td>
+                                    <td>
+                                        <div class="d-flex gap-1">
+                                            <form asp-action="EditMaterialAnaplan" asp-controller="Master" asp-route-id="@item.Id">
+                                                <button type="submit" class="btn btn-sm btn-warning" title="Edit">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                            </form>
+                                            <form asp-action="DeleteMaterialAnaplan" asp-controller="Master"
+                                                  asp-route-id="@item.Id">
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td>@item.Code</td>
-                                <td>@item.Description</td>
-                                <td>@item.ProcDeptCode - @item.ProcDeptName</td>
-                                <td>@item.GeneralLedgerCode - @item.GeneralLedgerDescription</td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning" title="Edit" onclick="updateGL(@item.Id)">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" title="Delete" onclick="deleteGL(@item.Id)">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
+                                <td colspan="11" class="text-center text-muted py-4">
+                                    No Material Anaplans found
                                 </td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="11" class="text-center text-muted py-4">
-                                No General Ledgers found
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-    <nav aria-label="Page navigation" style="padding-top:10px;">
-        <ul class="pagination">
-            @if (Model != null)
-            {
-                int totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
-
-                <!-- Previous -->
-                <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
-                    <a class="page-link" asp-action="MaterialAnaplans" asp-route-page="@(Model.PageNumber - 1)"
-                       asp-route-search="@Model.SearchTerm">
-                        Previous
-                    </a>
-
-                </li>
-
-                <!-- Page numbers -->
-                for (int i = 1; i <= totalPages; i++)
+        <nav aria-label="Page navigation" style="padding-top:10px;">
+            <ul class="pagination">
+                @if (Model != null)
                 {
-                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                        <a class="page-link" asp-action="MaterialAnaplans" asp-route-page="@i"
+                    int totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+
+                    <!-- Previous -->
+                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="MaterialAnaplans" asp-route-page="@(Model.PageNumber - 1)"
                            asp-route-search="@Model.SearchTerm">
-                            @i
+                            Previous
+                        </a>
+
+                    </li>
+
+                    <!-- Page numbers -->
+                    for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a class="page-link" asp-action="MaterialAnaplans" asp-route-page="@i"
+                               asp-route-search="@Model.SearchTerm">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    <!-- Next -->
+                    <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
+                        <a class="page-link" asp-action="MaterialAnaplans" asp-route-page="@(Model.PageNumber + 1)"
+                           asp-route-search="@Model.SearchTerm">
+                            Next
                         </a>
                     </li>
                 }
+            </ul>
+        </nav>
 
-                <!-- Next -->
-                <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
-                    <a class="page-link" asp-action="MaterialAnaplans" asp-route-page="@(Model.PageNumber + 1)"
-                       asp-route-search="@Model.SearchTerm">
-                        Next
-                    </a>
-                </li>
-            }
-        </ul>
-    </nav>
+        <a asp-action="Index" asp-controller="Home">
+            <input type="button" class="btn btn-primary" value="Back To Home" />
+        </a>
 
-    <a asp-action="Index" asp-controller="Home">
-        <input type="button" class="btn btn-primary" value="Back To Home" />
-    </a>
+        <partial name="_ModalPartial" />
 
-    <partial name="_ModalPartial" />
+    </div>
 
-</div>
-
-<script src="~/js/Master/general-ledgers.js"></script>
+    <script src="~/js/Master/material-anaplans.js"></script>
