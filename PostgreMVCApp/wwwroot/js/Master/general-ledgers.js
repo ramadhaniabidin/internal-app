@@ -238,6 +238,7 @@ function setupModalButton(callbackFunction) {
 function setupDeleteButton(callbackFunction, id) {
     const submitBtn = document.getElementById("btn-save");
     submitBtn.className = 'btn btn-danger';
+    submitBtn.textContent = "Delete";
     submitBtn.onclick = async () => {
         try {
             const response = await callbackFunction(id);
