@@ -26,9 +26,16 @@
                 </div>
                 <div class="d-flex gap-2">
                     <form asp-action="UserProcDepts" method="get" class="d-flex">
-                        <input type="text" name="search" class="form-control" value="@Model?.SearchTerm"
-                               id="searchInput" placeholder="Search user..."
-                               style="width: 250px;margin-right:10px;">
+                        <select asp-for="@Model.SearchBy" name="searchBy" id="searchBy" class="form-select"
+                                style="margin-right: 10px;">
+                            <option value="userAccount">User Account</option>
+                            <option value="userFullName">User Name</option>
+                            <option value="email">User Email</option>
+                            <option value="procurement department">Procurement Department</option>
+                            <option value="branch">Branch</option>
+                        </select>
+                        <input type="text" name="keyword" class="form-control" value="@Model?.SearchTerm"
+                               id="searchInput" placeholder="Search ..." style="width: 250px;margin-right:10px;">
                         <button type="submit" class="btn btn-secondary">Search</button>
                     </form>
                     <button class="btn btn-primary" onclick="createNew()">
@@ -42,14 +49,10 @@
                 <thead class="table-light">
                     <tr>
                         <th>User Account</th>
-                        <th>User Id</th>
                         <th>User Name</th>
                         <th>User Email</th>
-                        <th>Proc Dept Id</th>
-                        <th>Proc Dept Code</th>
-                        <th>Proc Dept Name</th>
-                        <th>Branch Code</th>
-                        <th>Branch Name</th>
+                        <th>Procurement Department</th>
+                        <th>Branch</th>
                         <th style="width: 150px;">Action</th>
                     </tr>
                 </thead>
@@ -60,21 +63,15 @@
                         {
                             <tr>
                                 <td>@item.UserAccount</td>
-                                <td>@item.UserId</td>
                                 <td>@item.UserFullName</td>
                                 <td>@item.UserEmail</td>
-                                <td>@item.ProcurementDepartmentId</td>
-                                <td>@item.ProcDeptCode</td>
-                                <td>@item.ProcDeptName</td>
-                                <td>@item.BranchCode</td>
+                                <td>@item.ProcDeptCode - @item.ProcDeptName</td>
                                 <td>@item.BranchName</td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" title="Edit"
-                                            onclick="editContractType(@item.Id)">
+                                    <button class="btn btn-sm btn-warning" title="Edit" onclick="editProcDept(@item.Id)">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-danger" title="Delete"
-                                            onclick="deleteContractType(@item.Id)">
+                                    <button class="btn btn-sm btn-danger" title="Delete" onclick="deleteContractType(@item.Id)">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </td>
@@ -101,8 +98,8 @@
 
                 <!-- Previous -->
                 <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
-                    <a class="page-link" asp-action="ContractTypes" asp-route-page="@(Model.PageNumber - 1)"
-                       asp-route-search="@Model.SearchTerm">
+                    <a class="page-link" asp-action="UserProcDepts" asp-route-page="@(Model.PageNumber - 1)"
+                       asp-route-searchBy="@Model.SearchBy">
                         Previous
                     </a>
 
@@ -112,8 +109,8 @@
                 for (int i = 1; i <= totalPages; i++)
                 {
                     <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                        <a class="page-link" asp-action="ContractTypes" asp-route-page="@i"
-                           asp-route-search="@Model.SearchTerm">
+                        <a class="page-link" asp-action="UserProcDepts" asp-route-page="@i"
+                           asp-route-searchBy="@Model.SearchBy">
                             @i
                         </a>
                     </li>
@@ -121,8 +118,8 @@
 
                 <!-- Next -->
                 <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
-                    <a class="page-link" asp-action="ContractTypes" asp-route-page="@(Model.PageNumber + 1)"
-                       asp-route-search="@Model.SearchTerm">
+                    <a class="page-link" asp-action="UserProcDepts" asp-route-page="@(Model.PageNumber + 1)"
+                       asp-route-searchBy="@Model.SearchBy">
                         Next
                     </a>
                 </li>

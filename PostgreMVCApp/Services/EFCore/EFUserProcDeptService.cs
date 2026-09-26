@@ -16,9 +16,9 @@ namespace PostgreMVCApp.Services.EFCore
             _context = context;
         }
 
-        public async Task<PagedResult<UserProcDept>> GetUserProcDeptAsync(int pageNumber, int pageSize, string? search)
+        public async Task<PagedResult<UserProcDept>> GetUserProcDeptAsync(int pageNumber, int pageSize, string? search, string? keyword)
         {
-            return await _apiHelper.GetUserProcDepts(pageNumber, pageSize, search);
+            return await _apiHelper.GetUserProcDepts(pageNumber, pageSize, search, keyword);
         }
     }
 }
