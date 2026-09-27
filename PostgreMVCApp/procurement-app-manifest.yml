@@ -22,7 +22,10 @@ spec:
             - name: ApiBaseUrl
               value: "https://api.procurement-app.my.id/api"
             - name: ConnectionStrings__PostgresConnection
-              value: "Host=postgres-service;Port=5432;Database=procurement_db;Username=postgres;Password=p@s5Bv4td4Tb@$3c0nex!0n"
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: ConnectionStrings__DockerPostgresConnection
           resources:
             requests:
               cpu: "100m"
