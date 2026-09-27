@@ -20,12 +20,22 @@ spec:
             - containerPort: 5000
           env:
             - name: AppSettings__APIBaseUrl
-              value: "http://procurement-api-service/api"
+              value: "https://api.procurement-app.my.id"
             - name: ConnectionStrings__PostgresConnection
               valueFrom:
                 secretKeyRef:
                   name: api-secret
                   key: ConnectionStrings__DockerPostgresConnection
+            - name: AppSettings__APIUsername
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: AppSettings__APIUsername
+            - name: AppSettings__APIPassword
+              valueFrom:
+                secretKeyRef:
+                  name: api-secret
+                  key: AppSettings__APIPassword
           resources:
             requests:
               cpu: "100m"
