@@ -327,11 +327,11 @@ namespace PostgreMVCApp.Controllers
         #endregion
 
         #region User Procurement Departments
-        public async Task<IActionResult> UserProcDepts(int page = 1, string? search = null)
+        public async Task<IActionResult> UserProcDepts(int page = 1, string? searchBy = null, string? keyword = null)
         {
             try
             {
-                var userProcDepts = await userProcDeptService.GetUserProcDeptAsync(page, PAGE_SIZE, search);
+                var userProcDepts = await userProcDeptService.GetUserProcDeptAsync(page, PAGE_SIZE, searchBy, keyword);
                 return View(userProcDepts);
             }
             catch(Exception ex)
@@ -344,11 +344,11 @@ namespace PostgreMVCApp.Controllers
         #endregion
 
         #region General Ledgers
-        public async Task<IActionResult> GeneralLedgers(int page = 1, string? search = null)
+        public async Task<IActionResult> GeneralLedgers(int page = 1, string? searchBy = null, string? keyword = null)
         {
             try
             {
-                var generalLedgers = await glService.GetGeneralLedgers(page, PAGE_SIZE, search);
+                var generalLedgers = await glService.GetGeneralLedgers(page, PAGE_SIZE, searchBy, keyword);
                 return View(generalLedgers);
             }
             catch (Exception ex)
@@ -358,8 +358,6 @@ namespace PostgreMVCApp.Controllers
             }
         }
         #endregion Material anaplans
-
-
 
         #region Material Anaplans
         public async Task<IActionResult> MaterialAnaplans(int page = 1, string? searchBy = null, string? keyword = null)

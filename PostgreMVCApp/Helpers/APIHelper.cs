@@ -117,11 +117,11 @@ namespace PostgreMVCApp.Helpers
             }
         }
 
-        public async Task<PagedResult<UserProcDept>> GetUserProcDepts(int pageNumber, int pageSize, string? search)
+        public async Task<PagedResult<UserProcDept>> GetUserProcDepts(int pageNumber, int pageSize, string? searchBy, string? keyword)
         {
             try
             {
-                Dictionary<string, string?> queryParams = GetQueryParams(pageNumber, pageSize, search);
+                Dictionary<string, string?> queryParams = GetQueryParams(pageNumber, pageSize, searchBy, keyword);
                 string url = QueryHelpers.AddQueryString("/api/UserProcDept", queryParams);
                 using var request = new HttpRequestMessage(HttpMethod.Get, url);
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
@@ -134,7 +134,7 @@ namespace PostgreMVCApp.Helpers
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    return ReturnEmptyItems<UserProcDept>(pageNumber, pageSize, search);
+                    return ReturnEmptyItems<UserProcDept>(pageNumber, pageSize, searchBy, keyword);
                 }
                 else
                 {
@@ -148,13 +148,14 @@ namespace PostgreMVCApp.Helpers
             }
         }
 
-        public async Task<PagedResult<GeneralLedgers>> GetGeneralLedgers(int pageNumber, int pageSize, string? search)
+        public async Task<PagedResult<GeneralLedgers>> GetGeneralLedgers(int pageNumber, int pageSize, string? searchBy, string? keyword)
         {
             var queryParams = new Dictionary<string, string?>
             {
                 ["pageNumber"] = pageNumber.ToString(),
                 ["pageSize"] = pageSize.ToString(),
-                ["keyword"] = search
+                ["searchBy"] = searchBy,
+                ["keyword"] = keyword
             };
             string url = QueryHelpers.AddQueryString("/api/GeneralLedger", queryParams);
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -168,7 +169,7 @@ namespace PostgreMVCApp.Helpers
                 }
                 else if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    return ReturnEmptyItems<GeneralLedgers>(pageNumber, pageSize, search);
+                    return ReturnEmptyItems<GeneralLedgers>(pageNumber, pageSize, searchBy, keyword);
                 }
                 else
                 {
@@ -297,6 +298,18 @@ namespace PostgreMVCApp.Helpers
             };
             return queryParams;
         }
+        private Dictionary<string, string?> GetQueryParams(int pageNumber, int pageSize, string? search, string? keyword)
+        {
+            var queryParams = new Dictionary<string, string?>
+            {
+                ["pageNumber"] = pageNumber.ToString(),
+                ["pageSize"] = pageSize.ToString(),
+                ["searchBy"] = search,
+                ["keyword"] = keyword
+            };
+            return queryParams;
+        }
+
 
     }
 }
