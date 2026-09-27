@@ -31,7 +31,7 @@ jobs:
         with:
           context: .
           # Ganti path Dockerfile jika file Dockerfile MVC berada di sub-folder
-          file: ./Dockerfile   # Atau ./ProcurementWeb/Dockerfile
+          file: PostgreMVCApp/Dockerfile   # Atau ./ProcurementWeb/Dockerfile
           platforms: linux/amd64
           push: true
           tags: myramadhani/procurement-app:v1
