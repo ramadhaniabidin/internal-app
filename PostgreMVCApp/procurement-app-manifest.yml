@@ -19,8 +19,8 @@ spec:
           ports:
             - containerPort: 5000
           env:
-            - name: ApiBaseUrl
-              value: "https://api.procurement-app.my.id/api"
+            - name: AppSettings__APIBaseUrl
+              value: "http://procurement-api-service/api"
             - name: ConnectionStrings__PostgresConnection
               valueFrom:
                 secretKeyRef:
@@ -42,6 +42,6 @@ spec:
   type: ClusterIP
   ports:
     - port: 8080
-      targetPort: 8080
+      targetPort: 5000
   selector:
     app: procurement-app
