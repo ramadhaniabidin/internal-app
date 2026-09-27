@@ -29,9 +29,9 @@ jobs:
       - name: Build and Push MVC Docker Image (Staging)
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./PostgreMVCApp
           # Ganti path Dockerfile jika file Dockerfile MVC berada di sub-folder
-          file: PostgreMVCApp/Dockerfile   # Atau ./ProcurementWeb/Dockerfile
+          file: ./PostgreMVCApp/Dockerfile   # Atau ./ProcurementWeb/Dockerfile
           platforms: linux/amd64
           push: true
           tags: myramadhani/procurement-app:v1
