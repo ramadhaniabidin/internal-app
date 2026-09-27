@@ -1,4 +1,4 @@
-﻿const baseUrl = 'http://localhost:30001';
+﻿const baseUrl = 'https://api.procurement-app.my.id';
 
 async function getToken() {
     const loginResponse = await fetch(`${baseUrl}/api/auth/token`, {

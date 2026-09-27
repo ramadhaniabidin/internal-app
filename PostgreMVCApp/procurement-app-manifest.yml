@@ -1,0 +1,44 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: procurement-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: procurement-app
+  template:
+    metadata:
+      labels:
+        app: procurement-app
+    spec:
+      containers:
+        - name: procurement-app
+          image: myramadhani/procurement-app:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          env:
+            - name: ApiBaseUrl
+              value: "https://api.procurement-app.my.id/api"
+            - name: ConnectionStrings__PostgresConnection
+              value: "Host=postgres-service;Port=5432;Database=procurement_db;Username=postgres;Password=p@s5Bv4td4Tb@$3c0nex!0n"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: procurement-app-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 5000
+  selector:
+    app: procurement-app
