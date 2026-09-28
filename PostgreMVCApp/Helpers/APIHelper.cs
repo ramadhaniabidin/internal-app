@@ -64,7 +64,7 @@ namespace PostgreMVCApp.Helpers
 
             // Jika Cache Kosong / Expired, Fetch Token Baru dari API
             var requestBody = new { Username = username };
-            var response = await _httpClient.PostAsJsonAsync("/auth/token-by-user", requestBody);
+            var response = await _httpClient.PostAsJsonAsync("/auth/login1", requestBody);
 
             if (response.IsSuccessStatusCode)
             {
