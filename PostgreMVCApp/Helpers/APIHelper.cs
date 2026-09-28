@@ -1,23 +1,34 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.Extensions.Caching.Memory;
 using PostgreMVCApp.DTO;
 using PostgreMVCApp.DTO.Display;
 using PostgreMVCApp.Models;
 using PostgreMVCApp.Models.Master_Data;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 
 namespace PostgreMVCApp.Helpers
 {
     public class APIHelper
     {
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly HttpClient _httpClient;
+        private readonly IMemoryCache _cache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string _baseUrl;
         private readonly string _username;
         private readonly string _password;
 
-        public APIHelper(IConfiguration configuration)
+        public APIHelper(
+            HttpClient httpClient, 
+            IMemoryCache cache, 
+            IHttpContextAccessor httpContextAccessor, 
+            IConfiguration configuration)
         {
+            _httpClient = httpClient;
+            _cache = cache;
+            _httpContextAccessor = httpContextAccessor;
             _username = configuration.GetValue<string>("AppSettings:APIUsername") ?? string.Empty;
             _password = configuration.GetValue<string>("AppSettings:APIPassword") ?? string.Empty;
             _baseUrl = configuration.GetValue<string>("AppSettings:APIBaseUrl") ?? string.Empty;
@@ -25,6 +36,52 @@ namespace PostgreMVCApp.Helpers
             {
                 _httpClient.BaseAddress = new Uri(_baseUrl);
             }
+        }
+
+        private string GetCurrentUsername()
+        {
+            return _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name)?.Value
+                ?? _httpContextAccessor.HttpContext?.User?.Identity?.Name
+                ?? string.Empty;
+        }
+
+        public async Task<string> EnsureTokenAsync(string? usernameOverride = null)
+        {
+            string username = usernameOverride ?? GetCurrentUsername();
+
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new InvalidOperationException("User is not authenticated or username is missing.");
+            }
+
+            string cacheKey = $"API_Token_{username}";
+
+            // Cek Cache
+            if (_cache.TryGetValue(cacheKey, out string? cachedToken) && !string.IsNullOrEmpty(cachedToken))
+            {
+                return cachedToken;
+            }
+
+            // Jika Cache Kosong / Expired, Fetch Token Baru dari API
+            var requestBody = new { Username = username };
+            var response = await _httpClient.PostAsJsonAsync("/auth/token-by-user", requestBody);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+                if (result != null && result.TryGetValue("token", out var token))
+                {
+                    // Simpan di Cache selama 55 menit (Buffer sebelum 1 jam expire)
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(55));
+
+                    _cache.Set(cacheKey, token, cacheOptions);
+                    return token;
+                }
+            }
+
+            var errorContent = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Failed to fetch API token for user '{username}': {response.StatusCode} - {errorContent}");
         }
 
         public async Task<string> GetToken()
@@ -37,7 +94,7 @@ namespace PostgreMVCApp.Helpers
 
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("/api/auth/login", loginData);
+                var response = await _httpClient.PostAsJsonAsync("/api/auth/token", loginData);
                 if (response.IsSuccessStatusCode)
                 {
                     var result = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
