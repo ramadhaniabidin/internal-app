@@ -17,10 +17,12 @@ spec:
           image: myramadhani/procurement-app:v1
           imagePullPolicy: Always
           ports:
-            - containerPort: 5000
+            - containerPort: 8080
           env:
             - name: AppSettings__APIBaseUrl
               value: "https://api.procurement-app.my.id"
+            - name: ASPNETCORE_HTTP_PORTS # <-- Tambahkan env ini untuk kepastian
+              value: "8080"
             - name: ConnectionStrings__PostgresConnection
               valueFrom:
                 secretKeyRef:
@@ -52,6 +54,6 @@ spec:
   type: ClusterIP
   ports:
     - port: 8080
-      targetPort: 5000
+      targetPort: 8080
   selector:
     app: procurement-app
