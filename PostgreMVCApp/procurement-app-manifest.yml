@@ -20,7 +20,7 @@ spec:
             - containerPort: 5000
           env:
             - name: AppSettings__APIBaseUrl
-              value: "http://procurement-api-service/api"
+              value: "https://api.procurement-app.my.id/api"
             - name: ConnectionStrings__PostgresConnection
               valueFrom:
                 secretKeyRef:
