@@ -9,10 +9,11 @@ namespace PostgreMVCApp.Services.EFCore
     public class EFBranchService
     {
         private readonly AppDbContext _context;
-        private readonly APIHelper _apiHelper = new APIHelper(new ConfigurationBuilder().AddJsonFile("appsettings.json").Build());
-        public EFBranchService(AppDbContext context)
+        private readonly APIHelper _apiHelper;
+        public EFBranchService(AppDbContext context, APIHelper apiHelper)
         {
             _context = context;
+            _apiHelper = apiHelper;
         }
         public List<Branch> GetBranches()
         {
