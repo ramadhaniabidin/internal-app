@@ -8,10 +8,11 @@ namespace PostgreMVCApp.Services.EFCore
     public class EFContractTypeService
     {
         private readonly AppDbContext _context;
-        private readonly APIHelper _apiHelper = new APIHelper(new ConfigurationBuilder().AddJsonFile("appsettings.json").Build());
-        public EFContractTypeService(AppDbContext context)
+        private readonly APIHelper _apiHelper;
+        public EFContractTypeService(AppDbContext context, APIHelper apiHelper)
         {
             _context = context;
+            _apiHelper = apiHelper;
         }
 
         public async Task<PagedResult<ContractType>> GetContractTypeAsync(int pageNumber, int pageSize, string? search)
