@@ -7,7 +7,12 @@ namespace PostgreMVCApp.Services.EFCore.Master_Data
 {
     public class EFMaterialAnaplanService
     {
-        private readonly APIHelper _apiHelper = new APIHelper(new ConfigurationBuilder().AddJsonFile("appsettings.json").Build());
+        private readonly APIHelper _apiHelper;
+
+        public EFMaterialAnaplanService(APIHelper apiHelper)
+        {
+            _apiHelper = apiHelper;
+        }
 
         public async Task<PagedResult<MaterialAnaplanDisplay>> GetMaterialAnaplans(int pageNumber, int pageSize, string? searchBy, string? keyword)
         {
