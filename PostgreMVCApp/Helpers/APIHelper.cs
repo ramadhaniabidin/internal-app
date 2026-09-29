@@ -36,6 +36,9 @@ namespace PostgreMVCApp.Helpers
             {
                 _httpClient.BaseAddress = new Uri(_baseUrl);
             }
+            Console.WriteLine($"API username: {_username}");
+            Console.WriteLine($"API password: {_password}");
+
         }
 
         private string GetCurrentUsername()
