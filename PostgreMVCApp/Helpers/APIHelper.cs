@@ -36,6 +36,9 @@ namespace PostgreMVCApp.Helpers
             {
                 _httpClient.BaseAddress = new Uri(_baseUrl);
             }
+            Console.WriteLine($"API username: {_username}");
+            Console.WriteLine($"API password: {_password}");
+
         }
 
         private string GetCurrentUsername()
@@ -48,7 +51,7 @@ namespace PostgreMVCApp.Helpers
         public async Task<string> EnsureTokenAsync(string? usernameOverride = null)
         {
             string username = usernameOverride ?? GetCurrentUsername();
-
+            Console.WriteLine($"username for get token: {username}");
             if (string.IsNullOrEmpty(username))
             {
                 throw new InvalidOperationException("User is not authenticated or username is missing.");
@@ -298,7 +301,7 @@ namespace PostgreMVCApp.Helpers
                 Dictionary<string, string?> queryParams = GetQueryParams(pageNumber, pageSize, search);
                 string url = QueryHelpers.AddQueryString("/api/Branch", queryParams);
                 using var request = new HttpRequestMessage(HttpMethod.Get, url);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetToken());
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await EnsureTokenAsync());
                 var response = await _httpClient.SendAsync(request);
                 if (response.IsSuccessStatusCode)
                 {
