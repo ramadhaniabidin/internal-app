@@ -47,7 +47,7 @@ function setupModalButton(callbackFunction) {
             closeModal();
             reloadPage();
         } catch (err) {
-            showErrorToast('Error: ' + error);
+            showErrorToast('Error: ' + err);
         }
 
     };
