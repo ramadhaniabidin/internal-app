@@ -16,10 +16,6 @@ function createNewBranch() {
     saveUpdate(addBranchModalTitle, primaryKeyId, modalFormControls, createBranch);
 };
 
-async function testGetToken() {
-    await testGetTokenAsync();  
-};
-
 async function editBranch(id) {
     const branch = await getBranchById(id);
     saveUpdate('update', updateBranchModalTitle, primaryKeyId, modalFormControls, updateBranchAsync, branch);
