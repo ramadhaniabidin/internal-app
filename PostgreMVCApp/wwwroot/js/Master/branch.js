@@ -5,6 +5,7 @@ const addBranchModalTitle = 'Add New Branch';
 const updateBranchModalTitle = 'Update Branch';
 const modalID = 'modal';
 const backdropClassName = '.modal-backdrop';
+let formControls = [];
 
 const modalFormControls = [
     { id: 'branchCode', label: 'Code', jsonProp: 'code', readOnly: true },
@@ -33,6 +34,16 @@ function saveUpdate(type, modalTitle, primaryKeyId, controls, callbackFunction, 
     openModalDialog(type, modalTitle, primaryKeyId, controls, existingData, dropDownItems);
 };
 
+function generatePayload() {
+    const payload = {};
+    formControls.forEach(control => {
+        const value = document.getElementById(control.id).value;
+        payload[control.jsonProp] = value;
+    });
+
+    return payload;
+};
+
 function setupModalButton(callbackFunction) {
     const submitBtn = document.getElementById("btn-save");
     submitBtn.onclick = async () => {
@@ -47,13 +58,14 @@ function setupModalButton(callbackFunction) {
             closeModal();
             reloadPage();
         } catch (err) {
-            showErrorToast('Error: ' + error);
+            showErrorToast('Error: ' + err);
         }
 
     };
 };
 
 function openModalDialog(type, modalTitle, primaryKeyId, controls, existingData, dropDownItems = null) {
+    formControls = controls;
     document.getElementById('modal-label').textContent = modalTitle;
     const modal = document.getElementById(modalID);
     modal.style.display = 'block';

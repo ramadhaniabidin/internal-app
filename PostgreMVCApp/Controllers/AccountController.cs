@@ -12,9 +12,11 @@ namespace PostgreMVCApp.Controllers
     public class AccountController : Controller
     {
         private readonly EFUserService _userService;
-        public AccountController(EFUserService userService)
+        private readonly APIHelper apiHelper;
+        public AccountController(EFUserService userService, APIHelper apiHelper)
         {
             _userService = userService;
+            this.apiHelper = apiHelper;
         }
         public IActionResult Login()
         {
@@ -43,6 +45,7 @@ namespace PostgreMVCApp.Controllers
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await apiHelper.EnsureTokenAsync(user.Username);
             return RedirectToAction("Index", "Home");
         }
 
@@ -68,6 +71,21 @@ namespace PostgreMVCApp.Controllers
             }
             return Json(null);
 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Token()
+        {
+            if (User.Identity != null && User.Identity.Name != null && User.Identity.IsAuthenticated)
+            {
+                var token = await apiHelper.EnsureTokenAsync();
+                return Json(new
+                {
+                    token,
+                    username = User.Identity.Name,
+                });
+            }
+            return Json(null);
         }
 
         public async Task<IActionResult> Logout()

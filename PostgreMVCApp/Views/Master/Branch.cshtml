@@ -80,7 +80,7 @@
                 <!-- Previous -->
                 <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
                     <a class="page-link" asp-action="Branch" asp-route-page="@(Model.PageNumber - 1)"
-                           asp-route-search="@Model.SearchTerm">
+                       asp-route-search="@Model.SearchTerm">
                         Previous
                     </a>
 
@@ -99,7 +99,7 @@
                 <!-- Next -->
                 <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
                     <a class="page-link" asp-action="Branch" asp-route-page="@(Model.PageNumber + 1)"
-                           asp-route-search="@Model.SearchTerm">
+                       asp-route-search="@Model.SearchTerm">
                         Next
                     </a>
                 </li>
@@ -110,7 +110,7 @@
         <input type="button" class="btn btn-primary" value="Back To Home" />
     </a>
 
-    <partial name="_ModalPartial"/>
+    <partial name="_ModalPartial" />
 
 </div>
 
