@@ -44,6 +44,13 @@ function generatePayload() {
     return payload;
 };
 
+function reloadPage() {
+    setTimeout(() => {
+        globalThis.location.reload();
+    }, 5000);
+};
+
+
 function setupModalButton(callbackFunction) {
     const submitBtn = document.getElementById("btn-save");
     submitBtn.onclick = async () => {
