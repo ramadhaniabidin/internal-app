@@ -78,7 +78,7 @@ namespace PostgreMVCApp.Controllers
         {
             if (User.Identity != null && User.Identity.Name != null && User.Identity.IsAuthenticated)
             {
-                var token = apiHelper.EnsureTokenAsync();
+                var token = await apiHelper.EnsureTokenAsync();
                 return Json(new
                 {
                     token,
