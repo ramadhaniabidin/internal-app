@@ -16,6 +16,18 @@ async function getToken() {
     return authData.token;
 };
 
+async function testGetTokenAsync() {
+    const loginResponse = await fetch(`/Account/Token`, {
+        method: postMethod,
+        headers: { 'Content-Type': contentType }
+    });
+
+    if (!loginResponse.ok) throw new Error('Login failed');
+    const authData = await loginResponse.json();
+    console.log(authData);
+    return authData.token;
+};
+
 async function getBranchById(id) {
     try {
         const token = await getToken();
