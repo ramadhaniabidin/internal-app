@@ -30,7 +30,7 @@ async function getBranchById(id) {
         const branch = await response.json();
         return branch;
     } catch (err) {
-        console.error("Error fetching branches:", error);
+        console.error("Error fetching branches:", err);
     }
 };
 
