@@ -9,10 +9,11 @@ namespace PostgreMVCApp.Services.EFCore
     public class EFVendorService
     {
         private readonly AppDbContext context;
-        private readonly APIHelper _apiHelper = new APIHelper(new ConfigurationBuilder().AddJsonFile("appsettings.json").Build());
-        public EFVendorService(AppDbContext context)
+        private readonly APIHelper _apiHelper;
+        public EFVendorService(AppDbContext context, APIHelper helper)
         {
             this.context = context;
+            _apiHelper = helper;
         }
 
         public async Task<PagedResult<VendorNonCommercials>> GetVendorsPages(int pageNumber, int pageSize, string? search)

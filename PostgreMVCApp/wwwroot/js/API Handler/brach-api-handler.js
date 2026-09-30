@@ -6,7 +6,7 @@ const putMethod = 'PUT';
 const deleteMethod = 'DELETE';
 
 async function getToken() {
-    const loginResponse = await fetch(`${baseUrl}/api/auth/token`, {
+    const loginResponse = await fetch(`/Account/Token`, {
         method: postMethod,
         headers: { 'Content-Type': contentType }
     });
@@ -30,7 +30,7 @@ async function getBranchById(id) {
         const branch = await response.json();
         return branch;
     } catch (err) {
-        console.error("Error fetching branches:", error);
+        console.error("Error fetching branches:", err);
     }
 };
 

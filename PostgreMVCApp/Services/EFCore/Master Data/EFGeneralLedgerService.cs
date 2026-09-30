@@ -6,11 +6,16 @@ namespace PostgreMVCApp.Services.EFCore.Master_Data
 {
     public class EFGeneralLedgerService
     {
-        private readonly APIHelper _apiHelper = new APIHelper(new ConfigurationBuilder().AddJsonFile("appsettings.json").Build());
+        private readonly APIHelper _apiHelper;
 
-        public async Task<PagedResult<GeneralLedgers>> GetGeneralLedgers(int pageNumber, int pageSize, string? search)
+        public EFGeneralLedgerService(APIHelper apiHelper)
         {
-            return await _apiHelper.GetGeneralLedgers(pageNumber, pageSize, search);
+            _apiHelper = apiHelper;
+        }
+
+        public async Task<PagedResult<GeneralLedgers>> GetGeneralLedgers(int pageNumber, int pageSize, string? search, string? keyword)
+        {
+            return await _apiHelper.GetGeneralLedgers(pageNumber, pageSize, search, keyword);
         }
 
 
