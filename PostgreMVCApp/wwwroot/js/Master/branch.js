@@ -33,6 +33,16 @@ function saveUpdate(type, modalTitle, primaryKeyId, controls, callbackFunction, 
     openModalDialog(type, modalTitle, primaryKeyId, controls, existingData, dropDownItems);
 };
 
+function generatePayload() {
+    const payload = {};
+    formControls.forEach(control => {
+        const value = document.getElementById(control.id).value;
+        payload[control.jsonProp] = value;
+    });
+
+    return payload;
+};
+
 function setupModalButton(callbackFunction) {
     const submitBtn = document.getElementById("btn-save");
     submitBtn.onclick = async () => {
