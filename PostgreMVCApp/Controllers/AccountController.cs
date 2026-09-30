@@ -73,6 +73,21 @@ namespace PostgreMVCApp.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Token()
+        {
+            if (User.Identity != null && User.Identity.Name != null && User.Identity.IsAuthenticated)
+            {
+                var token = apiHelper.EnsureTokenAsync();
+                return Json(new
+                {
+                    token,
+                    username = User.Identity.Name,
+                });
+            }
+            return Json(null);
+        }
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
