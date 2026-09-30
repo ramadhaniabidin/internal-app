@@ -5,6 +5,7 @@ const addBranchModalTitle = 'Add New Branch';
 const updateBranchModalTitle = 'Update Branch';
 const modalID = 'modal';
 const backdropClassName = '.modal-backdrop';
+let formControls = [];
 
 const modalFormControls = [
     { id: 'branchCode', label: 'Code', jsonProp: 'code', readOnly: true },
@@ -64,6 +65,7 @@ function setupModalButton(callbackFunction) {
 };
 
 function openModalDialog(type, modalTitle, primaryKeyId, controls, existingData, dropDownItems = null) {
+    formControls = controls;
     document.getElementById('modal-label').textContent = modalTitle;
     const modal = document.getElementById(modalID);
     modal.style.display = 'block';
